@@ -1,0 +1,666 @@
+---
+import "../styles/global.css";
+
+// Set a unique page identifier
+const pageId = "bodh";
+---
+
+<html lang="en-US" data-theme="light" class="bg-white dark:bg-[#111111]">
+  <head>
+    <meta charset=" utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Bodh Income</title>
+    <link rel="canonical" href="https://nirajkumar.space/bodhincome/" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      *::selection {
+        background: var(--sel-bg) !important;
+        color: var(--sel-text) !important;
+        text-shadow: none !important;
+      }
+      *::-moz-selection {
+        background: var(--sel-bg) !important;
+        color: var(--sel-text) !important;
+        text-shadow: none !important;
+      }
+    </style>
+    <!-- FOUC Removal -->
+    <script is:inline>
+      (function () {
+        const theme = localStorage.theme;
+        if (
+          theme === "dark" ||
+          (!theme && window.matchMedia("(prefers-color-scheme: dark)").matches)
+        ) {
+          document.documentElement.classList.add("dark");
+        } else {
+          document.documentElement.classList.remove("dark");
+        }
+      })();
+    </script>
+
+    <!-- Pass page ID to JavaScript -->
+    <script is:inline define:vars={{ pageId }}>
+      window.PAGE_ID = pageId;
+    </script>
+  </head>
+  <body
+    class="bg-white text-neutral-950 dark:bg-[#111111] dark:text-white min-h-screen w-full"
+  >
+    <div class="calendar-container max-w-7xl mx-auto p-6 font-sans">
+      <!-- Header Section -->
+      <div class="mb-8">
+        <div class="header-card rounded-2xl px-0 py-8 mb-8">
+          <div class="flex items-center justify-between mb-6 relative">
+            <!-- Center heading -->
+            <div class="absolute left-1/2 -translate-x-1/2 text-center">
+              <h1
+                class="text-4xl font-bold text-white mb-3 tracking-tight [font-family:'Futurism',cursive]"
+              >
+                Bodh Income
+              </h1>
+              <p
+                class="text-[#bbbbbb] text-lg [font-family:'Futurism',cursive]"
+              >
+                🍀 Income - $0.53/day
+              </p>
+            </div>
+
+            <!-- Button on right -->
+            <button
+              id="addYearBtn"
+              class="cursor-pointer btn-add text-white w-12 h-12 rounded-lg flex items-center justify-center text-xl font-semibold bg-zinc-900/60 hover:bg-zinc-900/40 border border-transparent p-4 mt-2 transition-all btn-accent ml-auto"
+              title="Add New Year"
+            >
+              +
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Years Container -->
+      <div id="yearsContainer"></div>
+
+      <!-- Tooltip -->
+      <div
+        id="tooltip"
+        class="tooltip fixed bg-gray-900 text-gray-50 px-4 py-3 rounded-xl text-[13px] font-medium pointer-events-none z-[1000] whitespace-nowrap shadow-xl backdrop-blur-md transform -translate-x-1/2 -translate-y-full -mt-2 opacity-0 transition-opacity duration-200 ease-in-out"
+      >
+      </div>
+    </div>
+    <script is:inline>
+      class IncomeTracker {
+        constructor() {
+          // Create unique localStorage keys based on the page ID
+          this.pageId = window.PAGE_ID || "default";
+          this.yearsStorageKey = `income-tracker-years-${this.pageId}`;
+          this.lockedStorageKey = `income-tracker-locked-${this.pageId}`;
+
+          this.tooltip = document.getElementById("tooltip");
+          this.tooltipTimeout = null;
+          this.years = this.loadData(this.yearsStorageKey, {});
+          this.lockedYears = this.loadData(this.lockedStorageKey, {});
+          this.colors = [
+            "#f1f5f9",
+            "#dcfce7",
+            "#bbf7d0",
+            "#86efac",
+            "#4ade80",
+            "#22c55e",
+            "#16a34a",
+          ];
+          this.monthNames = [
+            "Jan",
+            "Feb",
+            "Mar",
+            "Apr",
+            "May",
+            "Jun",
+            "Jul",
+            "Aug",
+            "Sep",
+            "Oct",
+            "Nov",
+            "Dec",
+          ];
+          this.init();
+        }
+
+        init() {
+          if (Object.keys(this.years).length === 0) {
+            this.years[new Date().getFullYear()] = {};
+            this.saveYears();
+          }
+          this.renderAllYears();
+          this.setupEventListeners();
+        }
+
+        loadData(key, defaultValue) {
+          try {
+            const stored = localStorage.getItem(key);
+            return stored ? JSON.parse(stored) : defaultValue;
+          } catch {
+            return defaultValue;
+          }
+        }
+
+        saveYears() {
+          localStorage.setItem(
+            this.yearsStorageKey,
+            JSON.stringify(this.years)
+          );
+        }
+        saveLockedYears() {
+          localStorage.setItem(
+            this.lockedStorageKey,
+            JSON.stringify(this.lockedYears)
+          );
+        }
+
+        toggleYearLock(year) {
+          if (this.lockedYears[year]) delete this.lockedYears[year];
+          else this.lockedYears[year] = true;
+          this.saveLockedYears();
+          this.renderAllYears();
+        }
+
+        getSortedYears() {
+          return Object.keys(this.years)
+            .map(Number)
+            .sort((a, b) => b - a);
+        }
+
+        addNewYear() {
+          const year = prompt("Enter the year (e.g., 2024, 2026):");
+          if (!year || isNaN(year)) {
+            if (year !== null) alert("Please enter a valid year.");
+            return;
+          }
+          const yearNum = parseInt(year);
+          if (yearNum < 2020 || yearNum > 2100)
+            return alert("Please enter a valid year between 2020 and 2100.");
+          if (this.years[yearNum]) return alert("This year already exists!");
+          this.years[yearNum] = {};
+          this.saveYears();
+          this.renderAllYears();
+        }
+
+        deleteYear(year) {
+          if (
+            confirm(
+              `Are you sure you want to delete all data for ${year}? This cannot be undone.`
+            )
+          ) {
+            delete this.years[year];
+            delete this.lockedYears[year];
+            this.saveYears();
+            this.saveLockedYears();
+            this.renderAllYears();
+          }
+        }
+
+        renderAllYears() {
+          const container = document.getElementById("yearsContainer");
+          container.innerHTML = "";
+          this.getSortedYears().forEach((year) => {
+            const yearData = this.years[year];
+            const maxValue = this.calculateMaxValue(yearData);
+            const isLocked = Boolean(this.lockedYears[year]);
+            const yearDiv = document.createElement("div");
+            yearDiv.className = "year-calendar mb-16";
+            yearDiv.innerHTML = this.generateYearHTML(
+              year,
+              yearData,
+              maxValue,
+              isLocked
+            );
+            container.appendChild(yearDiv);
+          });
+          this.setupCalendarEventListeners();
+        }
+
+        generateYearHTML(year, data, maxValue, isLocked) {
+          const totalIncome = Object.values(data).reduce((s, v) => s + v, 0);
+          const entryCount = Object.keys(data).length;
+
+          // For the first component (Year Header with Calendar) - Using habit card design
+          return `
+  <div class="year-card bg-zinc-900/60 border border-transparent p-4 mt-2 block hover:border-zinc-800 transition-all rounded-lg text-white rounded-2xl border-2 border-slate-700 p-6 shadow-lg">
+    <div class="flex justify-between items-center mb-6">
+      <div class="flex items-center gap-4">
+        <span class="text-2xl">🍃</span>
+        <h2 class="text-2xl font-bold text-white/50">${year}</h2>
+        ${isLocked ? '<span class="text-orange-500 text-sm">🔒</span>' : ""}
+      </div>
+      <div class="flex items-center gap-4">
+        <div class="year-stats text-sm text-gray-600 bg-slate-50 px-4 py-2 rounded-lg border border-slate-200">
+          <span class="font-semibold">$${totalIncome.toLocaleString()}</span> total • ${entryCount} days
+        </div>
+        <div class="flex gap-1">
+          <button class="btn-hover w-8 h-8 rounded-lg flex items-center justify-center text-sm bg-gradient-to-r from-emerald-400 to-emerald-400 text-white shadow-sm hover:shadow-md cursor-pointer export-year-btn"
+            data-year="${year}" title="Export ${year} data">↓</button>
+          <button class="btn-hover cursor-pointer w-8 h-8 rounded-lg flex items-center justify-center text-lg bg-white border border-gray-300 text-gray-600 shadow-sm hover:shadow-md import-year-btn ${
+            isLocked ? "opacity-50 cursor-not-allowed" : ""
+          }"
+            data-year="${year}" title="Import ${year} data" ${
+              isLocked ? "disabled" : ""
+            }>↑</button>
+          <button class="btn-hover cursor-pointer w-8 h-8 rounded-lg flex items-center justify-center text-sm ${
+            isLocked
+              ? "bg-amber-500 text-white"
+              : "bg-white border border-gray-300 text-gray-600"
+          } shadow-sm hover:shadow-md btn-lock ${isLocked ? "locked" : ""}"
+            data-year="${year}" title="${isLocked ? "Unlock" : "Lock"} ${year}">${isLocked ? "🔒" : "🔓"}</button>
+          <button class="btn-hover cursor-pointer w-8 h-8 rounded-lg flex items-center justify-center text-sm bg-white border border-gray-300 text-gray-600 shadow-sm hover:shadow-md reset-year-btn ${
+            isLocked ? "opacity-50 cursor-not-allowed" : ""
+          }"
+            data-year="${year}" title="Reset ${year} data" ${
+              isLocked ? "disabled" : ""
+            }>↺</button>
+          <button class="btn-hover cursor-pointer w-8 h-8 rounded-lg flex items-center justify-center text-lg bg-gradient-to-r from-red-400 to-red-500 text-white shadow-sm hover:shadow-md delete-year-btn"
+            data-year="${year}" title="Delete Year">×</button>
+        </div>
+      </div>
+    </div>
+    
+    <div class="bg-zinc-900/50 border border-transparent p-4 mt-2 block hover:border-zinc-800 transition-all rounded-lg rounded-xl border border-white/10 p-6">
+      <div class="w-full overflow-x-auto">
+        <svg class="calendar-svg mx-auto" data-year="${year}" width="1000" height="160">
+          <g class="month-labels" transform="translate(40, 15)">
+            ${this.generateMonthLabels(year)}
+          </g>
+          <g class="weekday-labels" transform="translate(35, 35)">
+            <text x="-5" y="9" class="weekday-label fill-current text-white text-[12px] font-medium" text-anchor="end" dominant-baseline="middle">Mon</text>
+            <text x="-5" y="45" class="weekday-label fill-current text-white text-[12px] font-medium" text-anchor="end" dominant-baseline="middle">Wed</text>
+            <text x="-5" y="81" class="weekday-label fill-current text-white text-[12px] font-medium" text-anchor="end" dominant-baseline="middle">Fri</text>
+          </g>
+          <g class="calendar-grid cursor-pointer" transform="translate(40, 30)">
+            ${this.generateCalendarGrid(year, data, maxValue, isLocked)}
+          </g>
+        </svg>
+      </div>
+    </div>
+    <input type="file" class="year-file-input hidden" data-year="${year}" accept=".json"/>
+  </div>
+`;
+        }
+
+        generateMonthLabels(year) {
+          const labels = [];
+          let week = 0;
+          for (let month = 0; month < 12; month++) {
+            const date = new Date(year, month, 1);
+            const firstDayOfWeek = date.getDay();
+            const startDayOffset =
+              firstDayOfWeek === 0 ? 6 : firstDayOfWeek - 1;
+            const dayOfYear = this.getDayOfYear(date);
+            week = Math.floor((dayOfYear + startDayOffset) / 7);
+            if (date.getDate() <= 7) {
+              labels.push(
+                `<text x="${
+                  week * 18
+                }" y="0" class="month-label fill-current text-white text-[12px] font-medium" text-anchor="start">${
+                  this.monthNames[month]
+                }</text>`
+              );
+            }
+          }
+          return labels.join("");
+        }
+
+        generateCalendarGrid(year, data, maxValue, isLocked) {
+          const startDate = new Date(year, 0, 1);
+          const endDate = new Date(year, 11, 31);
+          const firstDayOfWeek = startDate.getDay();
+          const startDayOffset = firstDayOfWeek === 0 ? 6 : firstDayOfWeek - 1;
+
+          const cells = [];
+          const currentDate = new Date(startDate);
+          let week = 0;
+          let day = startDayOffset;
+
+          while (currentDate <= endDate) {
+            const dateString = this.getDateString(currentDate);
+            const value = data[dateString] || 0;
+            const color = this.getColorForValue(value, maxValue);
+            const lockedClass = isLocked ? " locked" : "";
+
+            // Keep original class "day-cell", add Tailwind-like sizing via attributes
+            cells.push(
+              `<rect x="${week * 18}" y="${
+                day * 18
+              }" width="15" height="15" rx="3" ry="3" fill="${color}" class="day-cell${lockedClass}" data-date="${dateString}" data-value="${value}" data-year="${year}"></rect>`
+            );
+
+            currentDate.setDate(currentDate.getDate() + 1);
+            day++;
+            if (day >= 7) {
+              day = 0;
+              week++;
+            }
+          }
+          return cells.join("");
+        }
+
+        getDayOfYear(date) {
+          const start = new Date(date.getFullYear(), 0, 0);
+          const diff = date - start;
+          return Math.floor(diff / (1000 * 60 * 60 * 24));
+        }
+
+        calculateMaxValue(data) {
+          const values = Object.values(data).filter((v) => v > 0);
+          return values.length > 0 ? Math.max(...values) : 0;
+        }
+
+        getDateString(date) {
+          return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(
+            2,
+            "0"
+          )}-${String(date.getDate()).padStart(2, "0")}`;
+        }
+
+        getColorForValue(value, maxValue) {
+          if (value === 0) return this.colors[0];
+          const intensity = Math.min(value / (maxValue || 1), 1);
+          const colorIndex = Math.min(
+            Math.ceil(intensity * (this.colors.length - 2)) + 1,
+            this.colors.length - 1
+          );
+          return this.colors[colorIndex];
+        }
+
+        setupEventListeners() {
+          document
+            .getElementById("addYearBtn")
+            .addEventListener("click", () => this.addNewYear());
+        }
+
+        setupCalendarEventListeners() {
+          const container = document.getElementById("yearsContainer");
+
+          // Remove previous listeners by cloning container
+          const newContainer = container.cloneNode(true);
+          container.parentNode.replaceChild(newContainer, container);
+
+          newContainer.addEventListener("click", (e) => {
+            const target = e.target;
+            const year = parseInt(target.dataset.year);
+
+            if (
+              target.classList.contains("day-cell") &&
+              !target.classList.contains("locked")
+            ) {
+              this.handleCellClick(target);
+            } else if (target.classList.contains("export-year-btn")) {
+              this.exportYearJSON(year);
+            } else if (
+              target.classList.contains("import-year-btn") &&
+              !target.disabled
+            ) {
+              newContainer.querySelector(`input[data-year="${year}"]`)?.click();
+            } else if (
+              target.classList.contains("reset-year-btn") &&
+              !target.disabled
+            ) {
+              this.resetYear(year);
+            } else if (target.classList.contains("btn-lock")) {
+              this.toggleYearLock(year);
+            } else if (target.classList.contains("delete-year-btn")) {
+              this.deleteYear(year);
+            }
+          });
+
+          newContainer.addEventListener(
+            "mouseenter",
+            (e) => {
+              if (e.target.classList.contains("day-cell")) {
+                this.showTooltip(e.target, e);
+              }
+            },
+            true
+          );
+
+          newContainer.addEventListener(
+            "mouseleave",
+            (e) => {
+              if (e.target.classList.contains("day-cell")) {
+                this.hideTooltip();
+              }
+            },
+            true
+          );
+
+          newContainer.addEventListener("mousemove", (e) => {
+            if (
+              e.target.classList.contains("day-cell") &&
+              this.tooltip.classList.contains("show")
+            ) {
+              this.updateTooltipPosition(e);
+            }
+          });
+
+          newContainer.addEventListener("change", (e) => {
+            if (
+              e.target.classList.contains("year-file-input") &&
+              e.target.files?.[0]
+            ) {
+              const year = parseInt(e.target.dataset.year);
+              if (!this.lockedYears[year]) {
+                this.importYearJSON(e.target.files[0], year);
+              }
+              e.target.value = ""; // Clear file input
+            }
+          });
+        }
+
+        handleCellClick(cell) {
+          const date = cell.getAttribute("data-date");
+          const year = parseInt(cell.getAttribute("data-year"));
+          const currentValue = parseFloat(cell.getAttribute("data-value")) || 0;
+
+          const input = prompt(
+            `Enter income amount for ${new Date(
+              date
+            ).toLocaleDateString()}:\n\n` +
+              `Current income: $${currentValue.toLocaleString()}\n` +
+              `Enter amount (e.g., 50, 150, 500):`,
+            currentValue > 0 ? `${currentValue}` : ""
+          );
+
+          if (input !== null) {
+            const cleanInput = input.replace(/[$,\s]/g, "");
+            const newValue = parseFloat(cleanInput) || 0;
+            if (newValue >= 0) {
+              this.updateCell(date, year, newValue);
+            } else {
+              alert("Please enter a positive number or 0.");
+            }
+          }
+        }
+
+        updateCell(date, year, value) {
+          if (value === 0) {
+            delete this.years[year][date];
+          } else {
+            this.years[year][date] = value;
+          }
+          this.saveYears();
+          this.renderAllYears();
+        }
+
+        showTooltip(cell, event) {
+          clearTimeout(this.tooltipTimeout);
+
+          const date = cell.getAttribute("data-date");
+          const value = parseFloat(cell.getAttribute("data-value")) || 0;
+          const formattedDate = new Date(date).toLocaleDateString("en-US", {
+            weekday: "long",
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          });
+
+          const incomeText =
+            value === 0 ? "No income" : `$${value.toLocaleString()}`;
+          // include the arrow element since we can't use ::after without CSS
+          this.tooltip.innerHTML = `
+          <div class="font-semibold">${incomeText}</div>
+          <div class="text-gray-300">${formattedDate}</div>
+          <div class="absolute left-1/2 top-full -translate-x-1/2 w-0 h-0 border-x-6 border-x-transparent border-t-6 border-t-gray-900"></div>
+        `;
+          this.tooltip.classList.add("show", "opacity-100");
+          this.updateTooltipPosition(event);
+        }
+
+        updateTooltipPosition(event) {
+          this.tooltip.style.left = `${event.clientX}px`;
+          this.tooltip.style.top = `${event.clientY}px`;
+        }
+
+        hideTooltip() {
+          this.tooltipTimeout = setTimeout(() => {
+            this.tooltip.classList.remove("show", "opacity-100");
+          }, 100);
+        }
+
+        exportYearJSON(year) {
+          const yearData = this.years[year] || {};
+          const totalIncome = Object.values(yearData).reduce(
+            (sum, val) => sum + val,
+            0
+          );
+
+          const dataToExport = {
+            year,
+            data: yearData,
+            totalIncome,
+            entryCount: Object.keys(yearData).length,
+            exportedAt: new Date().toISOString().split("T")[0],
+          };
+
+          this.downloadJSON(dataToExport, `income-tracker-${year}.json`);
+        }
+
+        async importYearJSON(file, targetYear) {
+          try {
+            const text = await file.text();
+            const imported = JSON.parse(text);
+
+            let yearData = {};
+            if (imported.data && typeof imported.data === "object") {
+              yearData = imported.data;
+            } else if (imported.years && typeof imported.years === "object") {
+              const firstYear = Object.keys(imported.years)[0];
+              yearData = imported.years[firstYear] || {};
+            } else if (
+              typeof imported === "object" &&
+              !imported.year &&
+              !imported.years
+            ) {
+              yearData = imported;
+            } else {
+              throw new Error("Invalid format");
+            }
+
+            const processedData = {};
+            Object.entries(yearData).forEach(([dateStr, value]) => {
+              const val = parseFloat(value);
+              if (!isNaN(val) && val >= 0) {
+                const dateParts = dateStr.split("-");
+                if (dateParts.length === 3) {
+                  const newDateStr = `${targetYear}-${dateParts[1].padStart(
+                    2,
+                    "0"
+                  )}-${dateParts[2].padStart(2, "0")}`;
+                  processedData[newDateStr] = val;
+                }
+              }
+            });
+
+            if (Object.keys(processedData).length === 0) {
+              alert("No valid data found in the imported file.");
+              return;
+            }
+
+            const totalIncome = Object.values(processedData).reduce(
+              (sum, val) => sum + val,
+              0
+            );
+            const confirmMsg =
+              `Import ${
+                Object.keys(processedData).length
+              } entries into ${targetYear}?\n` +
+              `Total income: $${totalIncome.toLocaleString()}\n` +
+              `This will overwrite existing data for ${targetYear}.`;
+
+            if (confirm(confirmMsg)) {
+              this.years[targetYear] = processedData;
+              this.saveYears();
+              this.renderAllYears();
+              alert(
+                `Data imported successfully for ${targetYear}!\nTotal income: $${totalIncome.toLocaleString()}`
+              );
+            }
+          } catch (error) {
+            console.error("Import error:", error);
+            alert(
+              "Error reading file. Please make sure it's a valid JSON file exported from Income Tracker."
+            );
+          }
+        }
+
+        resetYear(year) {
+          const yearData = this.years[year] || {};
+          const entryCount = Object.keys(yearData).length;
+
+          if (this.lockedYears[year]) {
+            alert(`Cannot reset ${year}. Year is locked.`);
+            return;
+          }
+
+          if (entryCount === 0) {
+            alert(`No data to reset for ${year}.`);
+            return;
+          }
+
+          if (
+            confirm(
+              `Are you sure you want to reset all ${entryCount} entries for ${year}? This cannot be undone.`
+            )
+          ) {
+            this.years[year] = {};
+            this.saveYears();
+            this.renderAllYears();
+            alert(`All data for ${year} has been reset.`);
+          }
+        }
+
+        downloadJSON(data, filename) {
+          const blob = new Blob([JSON.stringify(data, null, 2)], {
+            type: "application/json",
+          });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = filename;
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          URL.revokeObjectURL(url);
+        }
+      }
+
+      // Initialize when DOM is loaded
+      document.addEventListener("DOMContentLoaded", () => {
+        new IncomeTracker();
+      });
+    </script>
+  </body>
+</html>

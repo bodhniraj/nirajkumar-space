@@ -1,0 +1,70 @@
+@import "tailwindcss";
+@plugin "daisyui";
+@custom-variant dark (&:where(.dark, .dark *));
+
+@font-face {
+  font-family: "Futurism";
+  src: url("/Futurism.woff2") format("opentype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+/* Universal */
+
+/* links */
+.links {
+  @apply text-black dark:text-white border-b border-[rgba(125,125,125,0.3)] hover:border-[rgba(125,125,125,1)];
+}
+
+/* Navigation */
+
+/* Navigation Menu */
+.motion {
+  @apply translate-y-0 skew-y-0 transition duration-500 group-hover:-translate-y-[110%] group-hover:skew-y-12;
+}
+
+.motion-after {
+  @apply absolute translate-y-[110%] skew-y-12 transition duration-500 group-hover:translate-y-0 group-hover:skew-y-0;
+}
+
+/* Nav Icons */
+
+.nav-icon {
+  @apply rounded-full p-1.5 sm:p-2 transition-all duration-300 hover:bg-neutral-100 dark:hover:bg-neutral-800;
+}
+
+.nav-svg {
+  @apply h-5 w-5 transition-colors duration-300 text-neutral-800 dark:text-neutral-200;
+}
+
+/* social links */
+.social-links {
+  @apply flex items-center space-x-2 border-b border-[rgba(125,125,125,0.3)] hover:border-[rgba(125,125,125,1)];
+}
+
+/* work label */
+.work-label {
+  @apply text-[#555555] dark:text-[#bbbbbb];
+}
+
+/* work backgrounds */
+.work {
+  @apply px-[0.25rem] py-[0.25rem] bg-[#88888822] text-[#888888] dark:bg-[#FFFFFF0D] rounded-sm font-['Roboto_Condensed',arial] inline-flex items-center gap-1 cursor-pointer hover:dark:bg-[#88888825] hover:dark:text-white;
+}
+
+/* work icons */
+.work .icon {
+  @apply w-[1em] h-[1em] object-contain;
+}
+
+/* glow links */
+.glow-link {
+  @apply text-black dark:text-white underline;
+}
+
+.dark .glow-link {
+  text-shadow: 0 0 0.8px hsla(40, 89%, 82%, 0.859),
+    0 0 2px hsla(40, 89%, 82%, 0.798), 0 0 3.8px hsla(40, 89%, 82%, 0.75),
+    0 0 6.7px hsla(40, 89%, 82%, 0.702), 0 0 12.5px hsla(40, 89%, 82%, 0.641),
+    0 0 30px hsla(40, 89%, 82%, 0.5);
+}

@@ -1,0 +1,649 @@
+---
+import "../styles/global.css";
+---
+
+<!doctype html>
+<html lang="en-US" data-theme="light" class="bg-white dark:bg-[#111111]">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Systema</title>
+    <link rel="canonical" href="https://nirajkumar.space/systema/" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+      }
+      .habit-card {
+        transition: all 0.3s ease;
+      }
+      .habit-card:hover {
+        transform: translateY(-4px);
+        box-shadow:
+          0 20px 25px -5px rgba(0, 0, 0, 0.1),
+          0 10px 10px -5px rgba(0, 0, 0, 0.04);
+      }
+      .day-cell {
+        cursor: pointer;
+        transition: all 0.2s ease;
+      }
+      .day-cell:hover {
+        stroke: #374151;
+        stroke-width: 2;
+      }
+      .day-cell.locked {
+        cursor: not-allowed;
+        opacity: 0.6;
+      }
+      .tooltip {
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+      }
+      .btn-hover {
+        transition: all 0.2s ease;
+      }
+      .btn-hover:hover {
+        transform: translateY(-1px);
+      }
+
+      *::selection {
+        background: var(--sel-bg) !important;
+        color: var(--sel-text) !important;
+        text-shadow: none !important;
+      }
+      *::-moz-selection {
+        background: var(--sel-bg) !important;
+        color: var(--sel-text) !important;
+        text-shadow: none !important;
+      }
+    </style>
+    <!-- FOUC Removal -->
+    <script is:inline>
+      (function () {
+        const theme = localStorage.theme;
+        if (
+          theme === "dark" ||
+          (!theme && window.matchMedia("(prefers-color-scheme: dark)").matches)
+        ) {
+          document.documentElement.classList.add("dark");
+        } else {
+          document.documentElement.classList.remove("dark");
+        }
+      })();
+    </script>
+  </head>
+  <body class="bg-[#111111] text-white min-h-screen">
+    <div class="max-w-7xl mx-auto p-6">
+      <!-- Header -->
+      <div class="text-center mb-12">
+        <h1 class="text-4xl font-bold mb-4 [font-family:'Futurism',cursive]">
+          Systema
+        </h1>
+        <p
+          class="text-lg text-[#bbbbbb] max-w-2xl mx-auto [font-family:'Futurism',cursive]"
+        >
+          Transform your life in 24 hours.
+        </p>
+      </div>
+
+      <!-- Habits Grid -->
+      <div id="habitsContainer" class="grid grid-cols-1 gap-8"></div>
+
+      <!-- Tooltip -->
+      <div
+        id="tooltip"
+        class="tooltip fixed bg-gray-900 text-white px-4 py-3 rounded-xl text-sm pointer-events-none z-50 opacity-0 transition-opacity duration-200"
+      >
+      </div>
+    </div>
+
+    <script is:inline>
+      class ProductivityTracker {
+        constructor() {
+          this.habits = {
+            "wabi-sabi": {
+              name: "Wabi Sabi",
+              color: "emerald",
+              icon: "🍀",
+              desc: "Income & Financial Mindfulness",
+            },
+            bodhkarma: {
+              name: "BodhKarma",
+              color: "orange",
+              icon: "🚀",
+              desc: "Studio & Creative Work",
+            },
+            karma: {
+              name: "Karma",
+              color: "red",
+              icon: "🥷",
+              desc: "Fitness & Physical Health",
+            },
+            bodhsloth: {
+              name: "BodhSloth",
+              color: "purple",
+              icon: "⛷️",
+              desc: "Skills & Learning",
+            },
+            param: {
+              name: "PARAM",
+              color: "orange",
+              icon: "⚽",
+              desc: "Hobbies & Interests",
+            },
+            bodh: {
+              name: "Bodh",
+              color: "blue",
+              icon: "📘",
+              desc: "Reading & Knowledge",
+            },
+            sages: {
+              name: "Sages",
+              color: "green",
+              icon: "🍃",
+              desc: "Nature & Mindfulness",
+            },
+          };
+
+          this.currentYear = new Date().getFullYear();
+          this.data = this.loadData();
+          this.lockedData = this.loadData("locked", {});
+
+          this.habitColors = {
+            "wabi-sabi": [
+              "#f1f5f9",
+              "#dcfce7",
+              "#bbf7d0",
+              "#86efac",
+              "#4ade80",
+              "#22c55e",
+              "#16a34a",
+            ],
+            bodhkarma: [
+              "#f1f5f9",
+              "#fed7aa",
+              "#fdba74",
+              "#fb923c",
+              "#f97316",
+              "#ea580c",
+              "#c2410c",
+            ],
+            karma: [
+              "#f1f5f9",
+              "#fee2e2",
+              "#fecaca",
+              "#fca5a5",
+              "#f87171",
+              "#ef4444",
+              "#dc2626",
+            ],
+            bodhsloth: [
+              "#f1f5f9",
+              "#f3e8ff",
+              "#e9d5ff",
+              "#c4b5fd",
+              "#a78bfa",
+              "#8b5cf6",
+              "#7c3aed",
+            ],
+            param: [
+              "#f1f5f9",
+              "#fed7aa",
+              "#fdba74",
+              "#fb923c",
+              "#f97316",
+              "#ea580c",
+              "#c2410c",
+            ],
+            bodh: [
+              "#f1f5f9",
+              "#dbeafe",
+              "#bfdbfe",
+              "#93c5fd",
+              "#60a5fa",
+              "#3b82f6",
+              "#2563eb",
+            ],
+            sages: [
+              "#f1f5f9",
+              "#d1fae5",
+              "#a7f3d0",
+              "#6ee7b7",
+              "#34d399",
+              "#10b981",
+              "#059669",
+            ],
+          };
+
+          this.monthNames = [
+            "Jan",
+            "Feb",
+            "Mar",
+            "Apr",
+            "May",
+            "Jun",
+            "Jul",
+            "Aug",
+            "Sep",
+            "Oct",
+            "Nov",
+            "Dec",
+          ];
+
+          this.tooltip = document.getElementById("tooltip");
+          this.init();
+        }
+
+        loadData(type = "data", fallback = {}) {
+          const key = `productivity-tracker-${type}`;
+          try {
+            return JSON.parse(localStorage.getItem(key)) || fallback;
+          } catch {
+            return fallback;
+          }
+        }
+
+        saveData(type = "data") {
+          const key = `productivity-tracker-${type}`;
+          const data = type === "locked" ? this.lockedData : this.data;
+          localStorage.setItem(key, JSON.stringify(data));
+        }
+
+        init() {
+          Object.keys(this.habits).forEach((habitId) => {
+            if (!this.data[habitId]) this.data[habitId] = {};
+          });
+          this.saveData();
+          this.render();
+        }
+
+        getColorVariants(baseColor) {
+          const variants = {
+            emerald: [
+              "from-emerald-500",
+              "to-emerald-600",
+              "border-emerald-200",
+              "bg-emerald-50",
+            ],
+            purple: [
+              "from-purple-500",
+              "to-purple-600",
+              "border-purple-200",
+              "bg-purple-50",
+            ],
+            red: ["from-red-500", "to-red-600", "border-red-200", "bg-red-50"],
+            blue: [
+              "from-blue-500",
+              "to-blue-600",
+              "border-blue-200",
+              "bg-blue-50",
+            ],
+            orange: [
+              "from-orange-500",
+              "to-orange-600",
+              "border-orange-200",
+              "bg-orange-50",
+            ],
+            indigo: [
+              "from-indigo-500",
+              "to-indigo-600",
+              "border-indigo-200",
+              "bg-indigo-50",
+            ],
+            green: [
+              "from-green-500",
+              "to-green-600",
+              "border-green-200",
+              "bg-green-50",
+            ],
+          };
+          return variants[baseColor] || variants.blue;
+        }
+
+        render() {
+          const container = document.getElementById("habitsContainer");
+          container.innerHTML = Object.entries(this.habits)
+            .map(([habitId, habit]) => {
+              const habitData = this.data[habitId] || {};
+              const isLocked = this.lockedData[habitId];
+              const [gradientFrom, gradientTo, borderColor, bgColor] =
+                this.getColorVariants(habit.color);
+              const totalDays = Object.keys(habitData).length;
+              const maxStreak = this.calculateStreak(habitData);
+
+              return `
+                        <div class="habit-card bg-zinc-900/60 border border-transparent p-4 mt-2 block hover:border-zinc-800 transition-all rounded-lg text-white rounded-2xl border-2 ${borderColor} p-6 shadow-lg ">
+                            <div class="flex justify-between items-start mb-6">
+                                <div>
+                                    <div class="flex items-center gap-3 mb-2">
+                                        <span class="text-2xl">${habit.icon}</span>
+                                        <h2 class="text-2xl font-bold text-white">${habit.name}</h2>
+                                        ${isLocked ? '<span class="text-orange-500 text-sm">🔒</span>' : ""}
+                                    </div>
+                                    <p class="text-white text-sm mb-3">${habit.desc}</p>
+                                    <div class="flex gap-4 text-xs text-white">
+                                        <span class="font-semibold">${totalDays} days</span>
+                                        <span>${maxStreak} day streak</span>
+                                    </div>
+                                </div>
+                                <div class="flex gap-1">
+                                    <button class="btn-hover w-8 h-8 rounded-lg flex items-center justify-center text-sm bg-gradient-to-r ${gradientFrom} ${gradientTo} text-white shadow-sm hover:shadow-md cursor-pointer"
+                                        onclick="tracker.exportHabit('${habitId}')" title="Export">↓</button>
+                                    <button class="btn-hover cursor-pointer w-8 h-8 rounded-lg flex items-center justify-center text-sm bg-white border border-gray-300 text-gray-600 shadow-sm hover:shadow-md ${isLocked ? "opacity-50" : ""}"
+                                        onclick="tracker.importHabit('${habitId}')" ${isLocked ? "disabled" : ""} title="Import">↑</button>
+                                    <button class="btn-hover cursor-pointer w-8 h-8 rounded-lg flex items-center justify-center text-sm ${isLocked ? "bg-amber-500 text-white" : "bg-white border border-gray-300 text-gray-600"} shadow-sm hover:shadow-md"
+                                        onclick="tracker.toggleLock('${habitId}')" title="${isLocked ? "Unlock" : "Lock"}">${isLocked ? "🔒" : "🔓"}</button>
+                                    <button class="btn-hover cursor-pointer w-8 h-8 rounded-lg flex items-center justify-center text-sm bg-white border border-gray-300 text-red-600 shadow-sm hover:shadow-md"
+                                        onclick="tracker.resetHabit('${habitId}')" title="Reset">↺</button>
+                                </div>
+                            </div>
+                            
+                            <div class="bg-zinc-900/50 border border-transparent p-4 mt-2 block hover:border-zinc-800 transition-all rounded-lg rounded-xl border border-white/10 p-6">
+                                <div class="w-full overflow-x-auto">
+                                    <svg class="calendar-svg mx-auto" data-habit="${habitId}" width="1000" height="160">
+                                        <g class="month-labels" transform="translate(40, 15)">
+                                            ${this.generateMonthLabels()}
+                                        </g>
+                                        <g class="weekday-labels" transform="translate(35, 35)">
+                                            <text x="-5" y="9" class="weekday-label fill-current text-white text-[12px] font-medium" text-anchor="end" dominant-baseline="middle">Mon</text>
+                                            <text x="-5" y="45" class="weekday-label fill-current text-white text-[12px] font-medium" text-anchor="end" dominant-baseline="middle">Wed</text>
+                                            <text x="-5" y="81" class="weekday-label fill-current text-white text-[12px] font-medium" text-anchor="end" dominant-baseline="middle">Fri</text>
+                                        </g>
+                                        <g class="calendar-grid cursor-pointer" transform="translate(40, 30)" data-habit="${habitId}">
+                                            ${this.generateCalendarGrid(habitData, isLocked, habitId)}
+                                        </g>
+                                    </svg>
+                                </div>
+                            </div>
+                            <input type="file" class="hidden" id="file-${habitId}" accept=".json" onchange="tracker.handleFileImport(event, '${habitId}')">
+                        </div>
+                    `;
+            })
+            .join("");
+
+          this.setupEventListeners();
+        }
+
+        generateMonthLabels() {
+          let labels = "";
+          let week = 0;
+          for (let month = 0; month < 12; month++) {
+            const date = new Date(this.currentYear, month, 1);
+            const firstDayOfWeek = date.getDay();
+            const startDayOffset =
+              firstDayOfWeek === 0 ? 6 : firstDayOfWeek - 1;
+            const dayOfYear = this.getDayOfYear(date);
+            week = Math.floor((dayOfYear + startDayOffset) / 7);
+
+            if (date.getDate() <= 7) {
+              labels += `<text x="${week * 18}" y="0" class="month-label fill-current text-white text-[12px] font-medium" text-anchor="start">${this.monthNames[month]}</text>`;
+            }
+          }
+          return labels;
+        }
+
+        generateCalendarGrid(habitData, isLocked, habitId) {
+          let grid = "";
+          const startDate = new Date(this.currentYear, 0, 1);
+          const endDate = new Date(this.currentYear, 11, 31);
+          const firstDayOfWeek = startDate.getDay();
+          const startDayOffset = firstDayOfWeek === 0 ? 6 : firstDayOfWeek - 1;
+
+          let currentDate = new Date(startDate);
+          let week = 0,
+            day = startDayOffset;
+
+          while (currentDate <= endDate) {
+            const dateString = this.getDateString(currentDate);
+            const value = habitData[dateString] || 0;
+            const color = this.getColorForValue(value, habitId);
+
+            grid += `<rect x="${week * 18}" y="${day * 18}" width="15" height="15" rx="3" ry="3" fill="${color}" 
+                             class="day-cell ${isLocked ? "locked" : ""}" 
+                             data-date="${dateString}" data-value="${value}"></rect>`;
+
+            currentDate.setDate(currentDate.getDate() + 1);
+            day++;
+            if (day >= 7) {
+              day = 0;
+              week++;
+            }
+          }
+          return grid;
+        }
+
+        getDayOfYear(date) {
+          const start = new Date(date.getFullYear(), 0, 0);
+          const diff = date - start;
+          return Math.floor(diff / (1000 * 60 * 60 * 24));
+        }
+
+        getDateString(date) {
+          return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+        }
+
+        getColorForValue(value, habitId) {
+          const colors =
+            this.habitColors[habitId] || this.habitColors["wabi-sabi"];
+          return colors[Math.min(value, colors.length - 1)];
+        }
+
+        calculateStreak(habitData) {
+          const dates = Object.keys(habitData)
+            .filter((date) => habitData[date] > 0)
+            .sort()
+            .reverse();
+          if (!dates.length) return 0;
+
+          let streak = 0;
+          let currentDate = new Date();
+
+          for (const dateStr of dates) {
+            const date = new Date(dateStr);
+            const diffDays = Math.floor((currentDate - date) / 86400000);
+
+            if (diffDays === streak) {
+              streak++;
+              currentDate = new Date(date);
+              currentDate.setDate(currentDate.getDate() - 1);
+            } else break;
+          }
+          return streak;
+        }
+
+        setupEventListeners() {
+          const container = document.getElementById("habitsContainer");
+
+          // Remove previous listeners by cloning container
+          const newContainer = container.cloneNode(true);
+          container.parentNode.replaceChild(newContainer, container);
+
+          newContainer.addEventListener("click", (e) => {
+            if (
+              e.target.classList.contains("day-cell") &&
+              !e.target.classList.contains("locked")
+            ) {
+              this.handleCellClick(e);
+            }
+          });
+
+          newContainer.addEventListener(
+            "mouseenter",
+            (e) => {
+              if (e.target.classList.contains("day-cell")) {
+                this.showTooltip(e);
+              }
+            },
+            true
+          );
+
+          newContainer.addEventListener(
+            "mouseleave",
+            (e) => {
+              if (e.target.classList.contains("day-cell")) {
+                this.hideTooltip();
+              }
+            },
+            true
+          );
+
+          newContainer.addEventListener("mousemove", (e) => {
+            if (
+              e.target.classList.contains("day-cell") &&
+              this.tooltip.classList.contains("opacity-100")
+            ) {
+              this.updateTooltipPosition(e);
+            }
+          });
+        }
+
+        handleCellClick(e) {
+          const habitId = e.target.closest("g").dataset.habit;
+          const date = e.target.dataset.date;
+          const currentValue = parseInt(e.target.dataset.value) || 0;
+
+          const newValue = prompt(
+            `Rate your ${this.habits[habitId].name} for ${new Date(date).toLocaleDateString()} (0-6):\n\n0: Not done\n1: Minimal effort\n2: Low effort\n3: Moderate effort\n4: Good effort\n5: Great effort\n6: Exceptional effort`,
+            currentValue
+          );
+
+          if (newValue !== null) {
+            const value = Math.max(0, Math.min(6, parseInt(newValue) || 0));
+            this.updateCell(habitId, date, value);
+          }
+        }
+
+        updateCell(habitId, date, value) {
+          if (value === 0) {
+            delete this.data[habitId][date];
+          } else {
+            this.data[habitId][date] = value;
+          }
+          this.saveData();
+          this.render();
+        }
+
+        showTooltip(e) {
+          const date = e.target.dataset.date;
+          const value = parseInt(e.target.dataset.value) || 0;
+          const formattedDate = new Date(date).toLocaleDateString("en-US", {
+            weekday: "long",
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          });
+
+          const efforts = [
+            "No effort",
+            "Minimal effort",
+            "Low effort",
+            "Moderate effort",
+            "Good effort",
+            "Great effort",
+            "Exceptional effort",
+          ];
+          this.tooltip.innerHTML = `
+                    <div class="font-semibold">${efforts[value]}</div>
+                    <div class="text-gray-300">${formattedDate}</div>
+                    <div class="absolute left-1/2 top-full -translate-x-1/2 w-0 h-0 border-x-6 border-x-transparent border-t-6 border-t-gray-900"></div>
+                `;
+          this.tooltip.classList.add("opacity-100");
+          this.updateTooltipPosition(e);
+        }
+
+        updateTooltipPosition(e) {
+          this.tooltip.style.left = `${e.clientX}px`;
+          this.tooltip.style.top = `${e.clientY}px`;
+        }
+
+        hideTooltip() {
+          this.tooltip.classList.remove("opacity-100");
+        }
+
+        toggleLock(habitId) {
+          this.lockedData[habitId] = !this.lockedData[habitId];
+          this.saveData("locked");
+          this.render();
+        }
+
+        exportHabit(habitId) {
+          const data = {
+            habit: this.habits[habitId].name,
+            year: this.currentYear,
+            data: this.data[habitId],
+            exportedAt: new Date().toISOString().split("T")[0],
+          };
+          this.downloadJSON(data, `${habitId}-${this.currentYear}.json`);
+        }
+
+        importHabit(habitId) {
+          if (this.lockedData[habitId]) {
+            alert("Cannot import to locked habit");
+            return;
+          }
+          document.getElementById(`file-${habitId}`).click();
+        }
+
+        handleFileImport(e, habitId) {
+          const file = e.target.files[0];
+          if (!file) return;
+
+          const reader = new FileReader();
+          reader.onload = (event) => {
+            try {
+              const imported = JSON.parse(event.target.result);
+              const data = imported.data || imported;
+
+              if (
+                confirm(
+                  `Import ${Object.keys(data).length} entries for ${this.habits[habitId].name}?`
+                )
+              ) {
+                this.data[habitId] = data;
+                this.saveData();
+                this.render();
+                alert("Data imported successfully!");
+              }
+            } catch {
+              alert("Invalid file format");
+            }
+          };
+          reader.readAsText(file);
+          e.target.value = "";
+        }
+
+        resetHabit(habitId) {
+          if (this.lockedData[habitId]) {
+            alert("Cannot reset locked habit");
+            return;
+          }
+
+          if (confirm(`Reset all data for ${this.habits[habitId].name}?`)) {
+            this.data[habitId] = {};
+            this.saveData();
+            this.render();
+          }
+        }
+
+        downloadJSON(data, filename) {
+          const blob = new Blob([JSON.stringify(data, null, 2)], {
+            type: "application/json",
+          });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = filename;
+          a.click();
+          URL.revokeObjectURL(url);
+        }
+      }
+
+      const tracker = new ProductivityTracker();
+    </script>
+  </body>
+</html>
