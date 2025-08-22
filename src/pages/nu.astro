@@ -1,0 +1,161 @@
+---
+import "../styles/global.css";
+import Navigation from "../components/Navigation.astro";
+import BodhNiraj from "../components/BodhNiraj.astro";
+---
+
+<html lang="en-US" data-theme="light" class="bg-white dark:bg-[#111111]">
+  <head>
+    <meta charset=" utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Nu</title>
+    <meta name="description" content="BodhNiraj Personal Space" />
+    <link rel="canonical" href="https://nirajkumar.space/nu/" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Gloria+Hallelujah&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      html {
+        font-size: 16px;
+      }
+
+      body {
+        font-family: "Inter", system-ui, sans-serif;
+      }
+
+      :root {
+        --sel-bg: #dfdfdf;
+        --sel-text: #555555;
+      }
+
+      .dark {
+        --sel-bg: #242424;
+        --sel-text: #bbbbbb;
+      }
+
+      *::selection {
+        background: var(--sel-bg) !important;
+        color: var(--sel-text) !important;
+        text-shadow: none !important;
+      }
+      *::-moz-selection {
+        background: var(--sel-bg) !important;
+        color: var(--sel-text) !important;
+        text-shadow: none !important;
+      }
+    </style>
+
+    <!-- FOUC Removal -->
+    <script is:inline>
+      (function () {
+        const theme = localStorage.theme;
+        if (
+          theme === "dark" ||
+          (!theme && window.matchMedia("(prefers-color-scheme: dark)").matches)
+        ) {
+          document.documentElement.classList.add("dark");
+        } else {
+          document.documentElement.classList.remove("dark");
+        }
+      })();
+    </script>
+  </head><body
+    class="bg-white text-neutral-950 dark:bg-[#111111] dark:text-white min-h-screen w-full"
+  >
+    <Navigation />
+    <BodhNiraj />
+
+    <script>
+      import "../scripts/darkmode.js";
+    </script>
+
+    <script is:inline>
+      // Income Local Storage ⭕
+      const el = document.getElementById("bodhniraj");
+
+      const saved = localStorage.getItem("bodhnirajValue");
+      if (saved) el.innerText = saved;
+
+      el.addEventListener("input", () => {
+        localStorage.setItem("bodhnirajValue", el.innerText);
+      });
+
+      // Button Color Change ⭕
+      const buttons = document.querySelectorAll(".done");
+
+      buttons.forEach((btn) => {
+        const key = btn.dataset.key;
+
+        // Load saved state
+        if (localStorage.getItem(key) === "true") {
+          btn.style.color = "white";
+        }
+
+        // Toggle color on click
+        btn.addEventListener("click", () => {
+          if (btn.style.color === "white") {
+            btn.style.color = ""; // reset to default
+            localStorage.setItem(key, "false");
+          } else {
+            btn.style.color = "white";
+            localStorage.setItem(key, "true");
+          }
+        });
+      });
+
+      // Earnings Toggle⭕
+      const earnButtons = document.querySelectorAll(".earn");
+
+      earnButtons.forEach((btn) => {
+        const key = btn.dataset.key;
+
+        // Load saved state
+        if (localStorage.getItem(key) === "true") {
+          btn.style.color = "white";
+        }
+
+        // Toggle color on click
+        btn.addEventListener("click", () => {
+          if (btn.style.color === "white") {
+            btn.style.color = ""; // reset to default
+            localStorage.setItem(key, "false");
+          } else {
+            btn.style.color = "white";
+            localStorage.setItem(key, "true");
+          }
+        });
+      });
+
+      //   Save Text ⭕
+      var contentBox = document.getElementById("content");
+      var keyName = "savedContent";
+
+      // Load saved value
+      var savedData = localStorage.getItem(keyName);
+      if (savedData) contentBox.innerHTML = savedData;
+
+      // Save on input
+      contentBox.addEventListener("input", function () {
+        localStorage.setItem(keyName, contentBox.innerHTML);
+      });
+    </script>
+  </body>
+</html>
