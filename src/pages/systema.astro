@@ -76,6 +76,19 @@ import "../styles/global.css";
         }
       })();
     </script>
+
+    <!-- Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-W2389NHMDM"
+    ></script>
+    <script is:inline>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+
+      gtag("config", "G-W2389NHMDM");
+    </script>
   </head>
   <body class="bg-[#111111] text-white min-h-screen">
     <div class="max-w-7xl mx-auto p-6">

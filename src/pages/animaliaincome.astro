@@ -50,6 +50,19 @@ const pageId = "animalia";
     <script is:inline define:vars={{ pageId }}>
       window.PAGE_ID = pageId;
     </script>
+
+    <!-- Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-W2389NHMDM"
+    ></script>
+    <script is:inline>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+
+      gtag("config", "G-W2389NHMDM");
+    </script>
   </head>
   <body
     class="bg-white text-neutral-950 dark:bg-[#111111] dark:text-white min-h-screen w-full"

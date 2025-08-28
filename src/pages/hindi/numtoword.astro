@@ -1,0 +1,424 @@
+---
+import "../../styles/global.css";
+import Navigation from "../../components/Navigation.astro";
+import NumberToWord from "../../components/NumberToWord.astro";
+---
+
+<html lang="en-US" data-theme="light" class="bg-white dark:bg-[#111111]">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Number to Word Converter</title>
+    <meta
+      name="description"
+      content="Use this number to word converter to convert any number or amount into words in both hindi and english language."
+    />
+    <link rel="canonical" href="https://nirajkumar.space/numtoword/" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Gloria+Hallelujah&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      html {
+        font-size: 16px;
+      }
+
+      body {
+        font-family: "Inter", system-ui, sans-serif;
+      }
+
+      :root {
+        --sel-bg: #dfdfdf;
+        --sel-text: #555555;
+      }
+
+      .dark {
+        --sel-bg: #242424;
+        --sel-text: #bbbbbb;
+      }
+
+      *::selection {
+        background: var(--sel-bg) !important;
+        color: var(--sel-text) !important;
+        text-shadow: none !important;
+      }
+      *::-moz-selection {
+        background: var(--sel-bg) !important;
+        color: var(--sel-text) !important;
+        text-shadow: none !important;
+      }
+    </style>
+
+    <!-- FOUC Removal -->
+    <script is:inline>
+      (function () {
+        const theme = localStorage.theme;
+        if (
+          theme === "dark" ||
+          (!theme && window.matchMedia("(prefers-color-scheme: dark)").matches)
+        ) {
+          document.documentElement.classList.add("dark");
+        } else {
+          document.documentElement.classList.remove("dark");
+        }
+      })();
+    </script>
+
+    <!-- Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-W2389NHMDM"
+    ></script>
+    <script is:inline>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+
+      gtag("config", "G-W2389NHMDM");
+    </script>
+  </head><body
+    class="bg-white text-neutral-950 dark:bg-[#111111] dark:text-white min-h-screen w-full"
+  >
+    <Navigation />
+    <NumberToWord />
+
+    <script>
+      import "../../scripts/darkmode.js";
+    </script>
+
+    <script is:inline>
+      // English number words
+      const ones = [
+        "zero",
+        "one",
+        "two",
+        "three",
+        "four",
+        "five",
+        "six",
+        "seven",
+        "eight",
+        "nine",
+        "ten",
+        "eleven",
+        "twelve",
+        "thirteen",
+        "fourteen",
+        "fifteen",
+        "sixteen",
+        "seventeen",
+        "eighteen",
+        "nineteen",
+      ];
+      const tens = [
+        "",
+        "",
+        "twenty",
+        "thirty",
+        "forty",
+        "fifty",
+        "sixty",
+        "seventy",
+        "eighty",
+        "ninety",
+      ];
+
+      // Hindi numbers (0–100)
+      const hindiNums = [
+        "शून्य",
+        "एक",
+        "दो",
+        "तीन",
+        "चार",
+        "पाँच",
+        "छह",
+        "सात",
+        "आठ",
+        "नौ",
+        "दस",
+        "ग्यारह",
+        "बारह",
+        "तेरह",
+        "चौदह",
+        "पंद्रह",
+        "सोलह",
+        "सत्रह",
+        "अठारह",
+        "उन्नीस",
+        "बीस",
+        "इक्कीस",
+        "बाईस",
+        "तेईस",
+        "चौबीस",
+        "पच्चीस",
+        "छब्बीस",
+        "सत्ताईस",
+        "अट्ठाईस",
+        "उनतीस",
+        "तीस",
+        "इकतीस",
+        "बत्तीस",
+        "तैंतीस",
+        "चौंतीस",
+        "पैंतीस",
+        "छत्तीस",
+        "सैंतीस",
+        "अड़तीस",
+        "उनतालीस",
+        "चालीस",
+        "इकतालीस",
+        "बयालीस",
+        "तैंतालीस",
+        "चौंतालीस",
+        "पैंतालीस",
+        "छियालीस",
+        "सैंतालीस",
+        "अड़तालीस",
+        "उनचास",
+        "पचास",
+        "इक्यावन",
+        "बावन",
+        "तिरेपन",
+        "चौवन",
+        "पचपन",
+        "छप्पन",
+        "सत्तावन",
+        "अट्ठावन",
+        "उनसठ",
+        "साठ",
+        "इकसठ",
+        "बासठ",
+        "तिरेसठ",
+        "चौंसठ",
+        "पैंसठ",
+        "छियासठ",
+        "सड़सठ",
+        "अड़सठ",
+        "उनहत्तर",
+        "सत्तर",
+        "इकहत्तर",
+        "बहत्तर",
+        "तिहत्तर",
+        "चौहत्तर",
+        "पचहत्तर",
+        "छिहत्तर",
+        "सत्तहत्तर",
+        "अठहत्तर",
+        "उन्यासी",
+        "अस्सी",
+        "इक्यासी",
+        "बयासी",
+        "तिरेासी",
+        "चौरासी",
+        "पचासी",
+        "छियासी",
+        "सत्तासी",
+        "अट्ठासी",
+        "नवासी",
+        "नब्बे",
+        "इक्यानवे",
+        "बानवे",
+        "तिरेानवे",
+        "चौरानवे",
+        "पंचानवे",
+        "छियानवे",
+        "सत्तानवे",
+        "अट्ठानवे",
+        "निन्यानवे",
+        "सौ",
+      ];
+
+      // Hindi digit mapping
+      const hindiDigits = ["०", "१", "२", "३", "४", "५", "६", "७", "८", "९"];
+
+      // English converter
+      function numberToEnglish(n) {
+        if (n < 0) return "negative " + numberToEnglish(-n);
+        if (n < 20) return ones[n];
+        if (n < 100)
+          return tens[Math.floor(n / 10)] + (n % 10 ? " " + ones[n % 10] : "");
+        if (n < 1000)
+          return (
+            ones[Math.floor(n / 100)] +
+            " hundred" +
+            (n % 100 ? " " + numberToEnglish(n % 100) : "")
+          );
+        if (n < 1_000_000)
+          return (
+            numberToEnglish(Math.floor(n / 1000)) +
+            " thousand" +
+            (n % 1000 ? " " + numberToEnglish(n % 1000) : "")
+          );
+        if (n < 1_000_000_000)
+          return (
+            numberToEnglish(Math.floor(n / 1_000_000)) +
+            " million" +
+            (n % 1_000_000 ? " " + numberToEnglish(n % 1_000_000) : "")
+          );
+        if (n < 1_000_000_000_000)
+          return (
+            numberToEnglish(Math.floor(n / 1_000_000_000)) +
+            " billion" +
+            (n % 1_000_000_000 ? " " + numberToEnglish(n % 1_000_000_000) : "")
+          );
+        return "Number too large";
+      }
+
+      // Hindi converter (Indian system)
+      function numberToHindi(n) {
+        if (n < 0) return "ऋणात्मक " + numberToHindi(-n);
+        if (n <= 100) return hindiNums[n];
+        if (n < 1000) {
+          let hundreds = Math.floor(n / 100);
+          let remainder = n % 100;
+          let result = hindiNums[hundreds] + " सौ";
+          if (remainder > 0) {
+            result += " " + numberToHindi(remainder);
+          }
+          return result;
+        }
+        if (n < 100000) {
+          let thousands = Math.floor(n / 1000);
+          let remainder = n % 1000;
+          let result = numberToHindi(thousands) + " हज़ार";
+          if (remainder > 0) {
+            result += " " + numberToHindi(remainder);
+          }
+          return result;
+        }
+        if (n < 10000000) {
+          let lakhs = Math.floor(n / 100000);
+          let remainder = n % 100000;
+          let result = numberToHindi(lakhs) + " लाख";
+          if (remainder > 0) {
+            result += " " + numberToHindi(remainder);
+          }
+          return result;
+        }
+        if (n < 1000000000) {
+          let crores = Math.floor(n / 10000000);
+          let remainder = n % 10000000;
+          let result = numberToHindi(crores) + " करोड़";
+          if (remainder > 0) {
+            result += " " + numberToHindi(remainder);
+          }
+          return result;
+        }
+        if (n < 100000000000) {
+          let arabs = Math.floor(n / 1000000000);
+          let remainder = n % 1000000000;
+          let result = numberToHindi(arabs) + " अरब";
+          if (remainder > 0) {
+            result += " " + numberToHindi(remainder);
+          }
+          return result;
+        }
+        if (n < 10000000000000) {
+          let kharabs = Math.floor(n / 100000000000);
+          let remainder = n % 100000000000;
+          let result = numberToHindi(kharabs) + " खरब";
+          if (remainder > 0) {
+            result += " " + numberToHindi(remainder);
+          }
+          return result;
+        }
+        return "संख्या बहुत बड़ी है";
+      }
+
+      // Convert to Hindi digits
+      function toHindiDigits(num) {
+        return num
+          .toString()
+          .split("")
+          .map((digit) => hindiDigits[parseInt(digit)])
+          .join("");
+      }
+
+      function convertNumber() {
+        const input = document.getElementById("numberInput").value;
+        const num = parseInt(input);
+
+        if (input === "" || isNaN(num)) {
+          document.getElementById("englishOutput").innerText = "";
+          document.getElementById("hindiOutput").innerText = "";
+          document.getElementById("hindiNumbers").innerText = "";
+          document.getElementById("hindiCombined").innerText = "";
+          return;
+        }
+
+        const englishText = capitalizeWords(numberToEnglish(num));
+        const hindiText = numberToHindi(num);
+        const hindiNumerals = toHindiDigits(Math.abs(num));
+
+        document.getElementById("englishOutput").innerText = englishText;
+        document.getElementById("hindiOutput").innerText = hindiText;
+        document.getElementById("hindiNumbers").innerText = hindiNumerals;
+        document.getElementById("hindiCombined").innerText =
+          `${hindiNumerals} - ${hindiText}`;
+      }
+
+      //  Clipboard
+      function copyToClipboard(elementId) {
+        const element = document.getElementById(elementId);
+        const text = element.innerText;
+
+        if (!text || text.trim() === "") return;
+
+        // Use the modern clipboard API
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).catch((err) => {
+            console.error("Clipboard API failed:", err);
+            fallbackCopy(text);
+          });
+        } else {
+          fallbackCopy(text);
+        }
+      }
+
+      function fallbackCopy(text) {
+        const textarea = document.createElement("textarea");
+        textarea.value = text;
+        textarea.style.position = "fixed";
+        textarea.style.opacity = "0";
+        document.body.appendChild(textarea);
+        textarea.select();
+
+        try {
+          document.execCommand("copy");
+        } catch (err) {
+          console.error("Fallback copy failed:", err);
+        }
+
+        document.body.removeChild(textarea);
+      }
+
+      // Initialize with a sample number
+      window.onload = function () {
+        document.getElementById("numberInput").value = "";
+        convertNumber();
+      };
+
+      //  Convert to uppercase
+      function capitalizeWords(str) {
+        return str.toLowerCase().replace(/\b\w/g, (char) => char.toUpperCase());
+      }
+    </script>
+  </body>
+</html>

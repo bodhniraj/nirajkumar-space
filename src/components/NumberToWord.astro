@@ -1,0 +1,933 @@
+---
+
+---
+
+<!-- Content -->
+<main class="w-full max-w-2xl mx-auto px-4 py-12">
+  <!-- Hero Section -->
+  <section class="mb-8">
+    <h1 class="text-4xl font-bold mb-8 text-gray-900 dark:text-white">
+      Number to Word Converter
+    </h1>
+    <p class="text-[#555555] dark:text-[#bbbbbb] text-base mb-8">
+      Convert any amount or number into words (Hindi & English).
+    </p>
+
+    <!-- App -->
+    <div class="text-[#888888]">
+      <input
+        id="numberInput"
+        type="number"
+        placeholder="0"
+        class="input input-lg w-full mb-8 rounded-lg bg-[#88888822] text-[#888888] dark:bg-[#FFFFFF0D] dark:text-white hover:dark:bg-[#88888825] hover:dark:text-white"
+        oninput="convertNumber()"
+      />
+    </div>
+
+    <!-- Results -->
+    <div class="space-y-6">
+      <!-- English Result -->
+      <div
+        class="bg-[#88888822] text-[#888888] dark:bg-[#FFFFFF0D] dark:text-white hover:dark:bg-[#88888825] hover:dark:text-white rounded-lg p-6"
+      >
+        <div class="flex items-center justify-between mb-6">
+          <p class="text-lg font-medium">English</p>
+          <button
+            onclick="copyToClipboard('englishOutput')"
+            class="p-2 text-gray-400 transition-all duration-150 cursor-pointer active:scale-90"
+            title="Copy"
+          >
+            <svg
+              width="20"
+              height="20"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
+              ></path>
+            </svg>
+          </button>
+        </div>
+        <p
+          id="englishOutput"
+          class="text-[#888888] dark:text-white text-lg leading-relaxed min-h-[1.75rem]"
+        >
+        </p>
+      </div>
+
+      <!-- Hindi Result -->
+      <div
+        class="bg-[#88888822] text-[#888888] dark:bg-[#FFFFFF0D] dark:text-white hover:dark:bg-[#88888825] hover:dark:text-white rounded-lg p-6"
+      >
+        <div class="flex items-center justify-between mb-6">
+          <p class="text-lg font-medium text-[#888888] dark:text-white">
+            हिंदी
+          </p>
+          <button
+            onclick="copyToClipboard('hindiCombined')"
+            class="p-2 text-gray-400 transition-all duration-150 cursor-pointer active:scale-90"
+            title="Copy"
+          >
+            <svg
+              width="20"
+              height="20"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
+              ></path>
+            </svg>
+          </button>
+        </div>
+        <div class="space-y-4">
+          <div>
+            <p class="text-sm text-[#888888] dark:text-white mb-2">Numerals</p>
+            <p
+              id="hindiNumbers"
+              class="text-[#888888] dark:text-white text-lg leading-relaxed min-h-[1.75rem]"
+            >
+            </p>
+          </div>
+          <div>
+            <p class="text-sm text-[#888888] dark:text-white mb-2">Words</p>
+            <p
+              id="hindiOutput"
+              class="text-[#888888] dark:text-white text-lg leading-relaxed min-h-[1.75rem]"
+            >
+            </p>
+          </div>
+        </div>
+        <div id="hindiCombined" class="hidden"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Content -->
+  <section class="mb-8">
+    <!-- 1 to 100 Counting in Hindi -->
+    <h2 class="text-lg font-semibold mb-4">1 to 100 Counting in Hindi</h2>
+    <div class="overflow-x-auto mb-8">
+      <table
+        class="table lg:table-fixed w-full border border-gray-400 text-center text-base leading-relaxed"
+      >
+        <thead
+          class="bg-gray-50 text-gray-600 dark:bg-[#111111] dark:text-white text-base md:text-lg leading-relaxed"
+        >
+          <tr>
+            <th class="border border-gray-300 dark:border-[#888888] p-2"
+              >Number</th
+            >
+            <th class="border border-gray-300 dark:border-[#888888] p-2"
+              >In Words</th
+            >
+          </tr>
+        </thead>
+        <tbody class="bg-[#ffffff0d]">
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2">1</td>
+            <td class="border border-gray-300 dark:border-[#888888] p-2">एक</td>
+          </tr>
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2">2</td>
+            <td class="border border-gray-300 dark:border-[#888888] p-2">दो</td>
+          </tr>
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2">3</td>
+            <td class="border border-gray-300 dark:border-[#888888] p-2">तीन</td
+            >
+          </tr>
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2">4</td>
+            <td class="border border-gray-300 dark:border-[#888888] p-2">चार</td
+            >
+          </tr>
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2">5</td>
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >पाँच</td
+            >
+          </tr>
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2">6</td>
+            <td class="border border-gray-300 dark:border-[#888888] p-2">छह</td>
+          </tr>
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2">7</td>
+            <td class="border border-gray-300 dark:border-[#888888] p-2">सात</td
+            >
+          </tr>
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2">8</td>
+            <td class="border border-gray-300 dark:border-[#888888] p-2">आठ</td>
+          </tr>
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2">9</td>
+            <td class="border border-gray-300 dark:border-[#888888] p-2">नौ</td>
+          </tr>
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2">10</td>
+            <td class="border border-gray-300 dark:border-[#888888] p-2">दस</td>
+          </tr>
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2">11</td>
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >ग्यारह</td
+            >
+          </tr>
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2">12</td>
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >बारह</td
+            >
+          </tr>
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2">13</td>
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >तेरह</td
+            >
+          </tr>
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2">14</td>
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >चौदह</td
+            >
+          </tr>
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2">15</td>
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >पंद्रह</td
+            >
+          </tr>
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2">16</td>
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >सोलह</td
+            >
+          </tr>
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2">17</td>
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >सत्रह</td
+            >
+          </tr>
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2">18</td>
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >अठारह</td
+            >
+          </tr>
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2">19</td>
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >उन्नीस</td
+            >
+          </tr>
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2">20</td>
+            <td class="border border-gray-300 dark:border-[#888888] p-2">बीस</td
+            >
+          </tr>
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2">21</td>
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >इक्कीस</td
+            >
+          </tr>
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2">22</td>
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >बाईस</td
+            >
+          </tr>
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2">23</td>
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >तेईस</td
+            >
+          </tr>
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2">24</td>
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >चौबीस</td
+            >
+          </tr>
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2">25</td>
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >पच्चीस</td
+            >
+          </tr>
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2">26</td>
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >छब्बीस</td
+            >
+          </tr>
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2">27</td>
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >सत्ताईस</td
+            >
+          </tr>
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2">28</td>
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >अट्ठाईस</td
+            >
+          </tr>
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2">29</td>
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >उनतीस</td
+            >
+          </tr>
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2">30</td>
+            <td class="border border-gray-300 dark:border-[#888888] p-2">तीस</td
+            >
+          </tr>
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2">31</td>
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >इकतीस</td
+            >
+          </tr>
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2">32</td>
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >बत्तीस</td
+            >
+          </tr>
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2">33</td>
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >तैंतीस</td
+            >
+          </tr>
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2">34</td>
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >चौंतीस</td
+            >
+          </tr>
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2">35</td>
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >पैंतीस</td
+            >
+          </tr>
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2">36</td>
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >छत्तीस</td
+            >
+          </tr>
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2">37</td>
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >सैंतीस</td
+            >
+          </tr>
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2">38</td>
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >अड़तीस</td
+            >
+          </tr>
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2">39</td>
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >उनतालीस</td
+            >
+          </tr>
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2">40</td>
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >चालीस</td
+            >
+          </tr>
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2">41</td>
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >इकतालीस</td
+            >
+          </tr>
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2">42</td>
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >बयालीस</td
+            >
+          </tr>
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2">43</td>
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >तैंतालीस</td
+            >
+          </tr>
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2">44</td>
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >चौंतालीस</td
+            >
+          </tr>
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2">45</td>
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >पैंतालीस</td
+            >
+          </tr>
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2">46</td>
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >छयालीस</td
+            >
+          </tr>
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2">47</td>
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >सैंतालीस</td
+            >
+          </tr>
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2">48</td>
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >अड़तालीस</td
+            >
+          </tr>
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2">49</td>
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >उनचास</td
+            >
+          </tr>
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2">50</td>
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >पचास</td
+            >
+          </tr>
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2">51</td>
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >इक्यावन</td
+            >
+          </tr>
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2">52</td>
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >बावन</td
+            >
+          </tr>
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2">53</td>
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >तिरेपन</td
+            >
+          </tr>
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2">54</td>
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >चौवन</td
+            >
+          </tr>
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2">55</td>
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >पचपन</td
+            >
+          </tr>
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2">56</td>
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >छप्पन</td
+            >
+          </tr>
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2">57</td>
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >सत्तावन</td
+            >
+          </tr>
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2">58</td>
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >अट्ठावन</td
+            >
+          </tr>
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2">59</td>
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >उनसठ</td
+            >
+          </tr>
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2">60</td>
+            <td class="border border-gray-300 dark:border-[#888888] p-2">साठ</td
+            >
+          </tr>
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2">61</td>
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >इकसठ</td
+            >
+          </tr>
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2">62</td>
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >बासठ</td
+            >
+          </tr>
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2">63</td>
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >तिरेसठ</td
+            >
+          </tr>
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2">64</td>
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >चौंसठ</td
+            >
+          </tr>
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2">65</td>
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >पैंसठ</td
+            >
+          </tr>
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2">66</td>
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >छियासठ</td
+            >
+          </tr>
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2">67</td>
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >सड़सठ</td
+            >
+          </tr>
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2">68</td>
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >अड़सठ</td
+            >
+          </tr>
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2">69</td>
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >उनहत्तर</td
+            >
+          </tr>
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2">70</td>
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >सत्तर</td
+            >
+          </tr>
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2">71</td>
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >इकहत्तर</td
+            >
+          </tr>
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2">72</td>
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >बहत्तर</td
+            >
+          </tr>
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2">73</td>
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >तिहत्तर</td
+            >
+          </tr>
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2">74</td>
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >चौहत्तर</td
+            >
+          </tr>
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2">75</td>
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >पचहत्तर</td
+            >
+          </tr>
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2">76</td>
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >छिहत्तर</td
+            >
+          </tr>
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2">77</td>
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >सत्तहत्तर</td
+            >
+          </tr>
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2">78</td>
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >अठहत्तर</td
+            >
+          </tr>
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2">79</td>
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >उन्यासी</td
+            >
+          </tr>
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2">80</td>
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >अस्सी</td
+            >
+          </tr>
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2">81</td>
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >इक्यासी</td
+            >
+          </tr>
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2">82</td>
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >बयासी</td
+            >
+          </tr>
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2">83</td>
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >तिरासी</td
+            >
+          </tr>
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2">84</td>
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >चौरासी</td
+            >
+          </tr>
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2">85</td>
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >पचासी</td
+            >
+          </tr>
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2">86</td>
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >छियासी</td
+            >
+          </tr>
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2">87</td>
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >सत्तासी</td
+            >
+          </tr>
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2">88</td>
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >अट्ठासी</td
+            >
+          </tr>
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2">89</td>
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >नवासी</td
+            >
+          </tr>
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2">90</td>
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >नब्बे</td
+            >
+          </tr>
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2">91</td>
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >इक्यानबे</td
+            >
+          </tr>
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2">92</td>
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >बानबे</td
+            >
+          </tr>
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2">93</td>
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >तिरानबे</td
+            >
+          </tr>
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2">94</td>
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >चौरानबे</td
+            >
+          </tr>
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2">95</td>
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >पचानबे</td
+            >
+          </tr>
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2">96</td>
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >छियानबे</td
+            >
+          </tr>
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2">97</td>
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >सत्तानबे</td
+            >
+          </tr>
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2">98</td>
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >अट्ठानबे</td
+            >
+          </tr>
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2">99</td>
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >निन्यानबे</td
+            >
+          </tr>
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2">100</td
+            >
+            <td class="border border-gray-300 dark:border-[#888888] p-2">सौ</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Hindi Number System  -->
+    <h2 class="text-lg font-semibold mb-4">Hindi Number System</h2>
+    <div class="overflow-x-auto">
+      <table
+        class="table lg:table-fixed w-full border border-gray-400 text-center text-base leading-relaxed"
+      >
+        <thead
+          class="bg-gray-50 text-gray-600 dark:bg-[#111111] dark:text-white text-base md:text-lg leading-relaxed"
+        >
+          <tr>
+            <th class="border border-gray-300 dark:border-[#888888] p-2"
+              >हिन्दी</th
+            >
+            <th class="border border-gray-300 dark:border-[#888888] p-2"
+              >संख्या</th
+            >
+          </tr>
+        </thead>
+        <tbody class="bg-[#ffffff0d]">
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >इकाई</td
+            >
+            <td class="border border-gray-300 dark:border-[#888888] p-2">1</td>
+          </tr>
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >दहाई</td
+            >
+            <td class="border border-gray-300 dark:border-[#888888] p-2">10</td>
+          </tr>
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >सैकड़ा</td
+            >
+            <td class="border border-gray-300 dark:border-[#888888] p-2">100</td
+            >
+          </tr>
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >हज़ार</td
+            >
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >1,000</td
+            >
+          </tr>
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >दस हज़ार</td
+            >
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >10,000</td
+            >
+          </tr>
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2">लाख</td
+            >
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >1,00,000</td
+            >
+          </tr>
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >दस लाख</td
+            >
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >10,00,000</td
+            >
+          </tr>
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >करोड़</td
+            >
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >1,00,00,000</td
+            >
+          </tr>
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >दस करोड़</td
+            >
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >10,00,00,000</td
+            >
+          </tr>
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2">अरब</td
+            >
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >1,00,00,00,000</td
+            >
+          </tr>
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2">खरब</td
+            >
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >1,00,00,00,00,000</td
+            >
+          </tr>
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2">नील</td
+            >
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >1,00,00,00,00,00,000</td
+            >
+          </tr>
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >पद्म</td
+            >
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >1,00,00,00,00,00,00,000</td
+            >
+          </tr>
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2">शंख</td
+            >
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >1,00,00,00,00,00,00,00,000</td
+            >
+          </tr>
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >महाशंख</td
+            >
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >1,00,00,00,00,00,00,00,00,000</td
+            >
+          </tr>
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >अंत्या</td
+            >
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >1,00,00,00,00,00,00,00,00,00,000</td
+            >
+          </tr>
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >महाअंत्या</td
+            >
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >1,00,00,00,00,00,00,00,00,00,00,000</td
+            >
+          </tr>
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >मध्या</td
+            >
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >1,00,00,00,00,00,00,00,00,00,00,00,000</td
+            >
+          </tr>
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >महामध्या</td
+            >
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >10<sup>27</sup></td
+            >
+          </tr>
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >अशोहिणी</td
+            >
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >10<sup>29</sup></td
+            >
+          </tr>
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >महा अशोहिणी</td
+            >
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >10<sup>31</sup></td
+            >
+          </tr>
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2">ओम</td>
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >10<sup>33</sup></td
+            >
+          </tr>
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >महाओम</td
+            >
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >10<sup>35</sup></td
+            >
+          </tr>
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2">गण</td>
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >10<sup>37</sup></td
+            >
+          </tr>
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >महागण</td
+            >
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >10<sup>41</sup></td
+            >
+          </tr>
+        </tbody>
+      </table>
+      <div class="flex items-center justify-center my-8">
+        <span class="text-gray-500 text-4xl tracking-widest">. . .</span>
+      </div>
+    </div>
+  </section>
+</main>
