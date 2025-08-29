@@ -1,0 +1,231 @@
+---
+import "../../styles/global.css";
+import Navigation from "../../components/Navigation.astro";
+import DobFigures from "../../components/DobFigures.astro";
+---
+
+<html lang="en-US" data-theme="light" class="bg-white dark:bg-[#111111]">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Date of Birth in Figures</title>
+    <meta
+      name="description"
+      content="Use this date of birth tool to convert your date of birth in figures."
+    />
+    <link rel="canonical" href="https://nirajkumar.space/dob/dobinfigures/" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Gloria+Hallelujah&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      html {
+        font-size: 16px;
+      }
+
+      body {
+        font-family: "Inter", system-ui, sans-serif;
+      }
+
+      :root {
+        --sel-bg: #dfdfdf;
+        --sel-text: #555555;
+      }
+
+      .dark {
+        --sel-bg: #242424;
+        --sel-text: #bbbbbb;
+      }
+
+      *::selection {
+        background: var(--sel-bg) !important;
+        color: var(--sel-text) !important;
+        text-shadow: none !important;
+      }
+      *::-moz-selection {
+        background: var(--sel-bg) !important;
+        color: var(--sel-text) !important;
+        text-shadow: none !important;
+      }
+    </style>
+
+    <!-- FOUC Removal -->
+    <script is:inline>
+      (function () {
+        const theme = localStorage.theme;
+        if (
+          theme === "dark" ||
+          (!theme && window.matchMedia("(prefers-color-scheme: dark)").matches)
+        ) {
+          document.documentElement.classList.add("dark");
+        } else {
+          document.documentElement.classList.remove("dark");
+        }
+      })();
+    </script>
+
+    <!-- Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-W2389NHMDM"
+    ></script>
+    <script is:inline>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+
+      gtag("config", "G-W2389NHMDM");
+    </script>
+  </head><body
+    class="bg-white text-neutral-950 dark:bg-[#111111] dark:text-white min-h-screen w-full"
+  >
+    <Navigation />
+    <DobFigures />
+
+    <script>
+      import "../../scripts/darkmode.js";
+    </script>
+    <script is:inline>
+      document.addEventListener("DOMContentLoaded", function () {
+        populateDays();
+        populateYears();
+      });
+
+      // Populate day dropdown (1-31)
+      function populateDays() {
+        const daySelect = document.getElementById("daySelect");
+        for (let i = 1; i <= 31; i++) {
+          const option = document.createElement("option");
+          option.value = i.toString().padStart(2, "0");
+          option.textContent = i;
+          option.className = "dark:bg-[#2c2c2c] dark:text-white";
+          daySelect.appendChild(option);
+        }
+      }
+
+      // Populate year dropdown (1900 to current year)
+      function populateYears() {
+        const yearSelect = document.getElementById("yearSelect");
+        const currentYear = new Date().getFullYear();
+        for (let i = currentYear; i >= 1900; i--) {
+          const option = document.createElement("option");
+          option.value = i;
+          option.textContent = i;
+          option.className = "dark:bg-[#2c2c2c] dark:text-white";
+          yearSelect.appendChild(option);
+        }
+      }
+
+      // Update date of birth display
+      function updateDateOfBirth() {
+        const day = document.getElementById("daySelect").value;
+        const month = document.getElementById("monthSelect").value;
+        const year = document.getElementById("yearSelect").value;
+
+        if (day && month && year) {
+          // Validate date
+          const date = new Date(year, month - 1, day);
+          const isValidDate =
+            date.getFullYear() == year &&
+            date.getMonth() == month - 1 &&
+            date.getDate() == day;
+
+          if (isValidDate) {
+            // Format the date in figures
+            const slashFormat = `${day}/${month}/${year}`;
+            const dashFormat = `${day}-${month}-${year}`;
+
+            document.getElementById("slashFormat").textContent = slashFormat;
+            document.getElementById("dashFormat").textContent = dashFormat;
+          } else {
+            document.getElementById("slashFormat").textContent =
+              "Invalid date selected";
+            document.getElementById("dashFormat").textContent =
+              "Invalid date selected";
+          }
+        } else {
+          // Reset display if not all fields are selected
+          document.getElementById("slashFormat").textContent =
+            "Select your date of birth";
+          document.getElementById("dashFormat").textContent =
+            "Select your date of birth";
+        }
+      }
+
+      // Copy to clipboard function
+      function copyToClipboard(elementId) {
+        const element = document.getElementById(elementId);
+        const text = element.textContent || element.innerText;
+
+        if (navigator.clipboard && window.isSecureContext) {
+          navigator.clipboard
+            .writeText(text)
+            .then(() => {
+              showCopyFeedback();
+            })
+            .catch((err) => {
+              fallbackCopyTextToClipboard(text);
+            });
+        } else {
+          fallbackCopyTextToClipboard(text);
+        }
+      }
+
+      // Fallback copy function for older browsers
+      function fallbackCopyTextToClipboard(text) {
+        const textArea = document.createElement("textarea");
+        textArea.value = text;
+        textArea.style.top = "0";
+        textArea.style.left = "0";
+        textArea.style.position = "fixed";
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+
+        try {
+          document.execCommand("copy");
+          showCopyFeedback();
+        } catch (err) {
+          console.error("Fallback: Oops, unable to copy", err);
+        }
+
+        document.body.removeChild(textArea);
+      }
+
+      // Show copy feedback
+      function showCopyFeedback() {
+        // Create temporary feedback element
+        const feedback = document.createElement("div");
+        feedback.textContent = "Copied!";
+        feedback.className =
+          "fixed bottom-4 right-4 bg-black text-white px-4 py-2 rounded-lg z-50 transition-opacity duration-300";
+        document.body.appendChild(feedback);
+
+        // Remove after 2 seconds
+        setTimeout(() => {
+          feedback.style.opacity = "0";
+          setTimeout(() => {
+            document.body.removeChild(feedback);
+          }, 300);
+        }, 2000);
+      }
+    </script>
+  </body>
+</html>

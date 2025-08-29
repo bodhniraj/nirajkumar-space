@@ -1,0 +1,187 @@
+---
+
+---
+
+<!-- Content -->
+<main class="w-full max-w-2xl mx-auto px-4 py-12">
+  <!-- Hero Section -->
+  <section class="mb-8">
+    <h1 class="text-4xl font-bold mb-8 text-gray-900 dark:text-white">
+      Date of Birth in Figures
+    </h1>
+    <p class="text-[#555555] dark:text-[#bbbbbb] text-base mb-8">
+      Enter your date of birth to convert it into figures (dd/mm/yyyy) or
+      (dd-mm-yyyy).
+    </p>
+
+    <!-- App -->
+    <div class="space-y-4 mb-8">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <!-- Day Dropdown -->
+        <div>
+          <label
+            for="daySelect"
+            class="block text-sm font-medium text-[#888888] dark:text-white mb-2"
+            >Day</label
+          >
+          <select
+            id="daySelect"
+            class="input input-lg w-full rounded-lg bg-[#88888822] text-[#888888] dark:text-white border-0 focus:outline-none p-3"
+            onchange="updateDateOfBirth()"
+          >
+            <option value="" class="dark:bg-[#2c2c2c] dark:text-white"
+              >Day</option
+            >
+          </select>
+        </div>
+
+        <!-- Month Dropdown -->
+        <div>
+          <label
+            for="monthSelect"
+            class="block text-sm font-medium text-[#888888] dark:text-white mb-2"
+            >Month</label
+          >
+          <select
+            id="monthSelect"
+            class="input input-lg w-full rounded-lg bg-[#88888822] text-[#888888] dark:text-white border-0 focus:outline-none p-3"
+            onchange="updateDateOfBirth()"
+          >
+            <option value="" class="dark:bg-[#2c2c2c] dark:text-white"
+              >Month</option
+            >
+            <option value="01" class="dark:bg-[#2c2c2c] dark:text-white"
+              >January</option
+            >
+            <option value="02" class="dark:bg-[#2c2c2c] dark:text-white"
+              >February</option
+            >
+            <option value="03" class="dark:bg-[#2c2c2c] dark:text-white"
+              >March</option
+            >
+            <option value="04" class="dark:bg-[#2c2c2c] dark:text-white"
+              >April</option
+            >
+            <option value="05" class="dark:bg-[#2c2c2c] dark:text-white"
+              >May</option
+            >
+            <option value="06" class="dark:bg-[#2c2c2c] dark:text-white"
+              >June</option
+            >
+            <option value="07" class="dark:bg-[#2c2c2c] dark:text-white"
+              >July</option
+            >
+            <option value="08" class="dark:bg-[#2c2c2c] dark:text-white"
+              >August</option
+            >
+            <option value="09" class="dark:bg-[#2c2c2c] dark:text-white"
+              >September</option
+            >
+            <option value="10" class="dark:bg-[#2c2c2c] dark:text-white"
+              >October</option
+            >
+            <option value="11" class="dark:bg-[#2c2c2c] dark:text-white"
+              >November</option
+            >
+            <option value="12" class="dark:bg-[#2c2c2c] dark:text-white"
+              >December</option
+            >
+          </select>
+        </div>
+
+        <!-- Year Dropdown -->
+        <div>
+          <label
+            for="yearSelect"
+            class="block text-sm font-medium text-[#888888] dark:text-white mb-2"
+            >Year</label
+          >
+          <select
+            id="yearSelect"
+            class="input input-lg w-full rounded-lg bg-[#88888822] text-[#888888]dark:text-white hover:dark:bg-[#88888825] hover:dark:text-white border-0 focus:outline-none p-3"
+            onchange="updateDateOfBirth()"
+          >
+            <option value="" class="dark:bg-[#2c2c2c] dark:text-white"
+              >Year</option
+            >
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Results -->
+    <div class="space-y-6">
+      <!-- DD/MM/YYYY Format -->
+      <div
+        class="bg-[#88888822] text-[#888888] dark:bg-[#FFFFFF0D] dark:text-white hover:dark:bg-[#88888825] hover:dark:text-white rounded-lg p-6"
+      >
+        <div class="flex items-center justify-between mb-6">
+          <p class="text-lg font-medium">DD/MM/YYYY</p>
+          <button
+            onclick="copyToClipboard('slashFormat')"
+            class="p-2 text-gray-400 transition-all duration-150 cursor-pointer active:scale-90"
+            title="Copy"
+          >
+            <svg
+              width="20"
+              height="20"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
+              ></path>
+            </svg>
+          </button>
+        </div>
+        <p
+          id="slashFormat"
+          class="text-[#888888] dark:text-white text-lg leading-relaxed min-h-[1.75rem]"
+        >
+          Select your date of birth
+        </p>
+      </div>
+
+      <!-- DD-MM-YYYY Format -->
+      <div
+        class="bg-[#88888822] text-[#888888] dark:bg-[#FFFFFF0D] dark:text-white hover:dark:bg-[#88888825] hover:dark:text-white rounded-lg p-6"
+      >
+        <div class="flex items-center justify-between mb-6">
+          <p class="text-lg font-medium text-[#888888] dark:text-white">
+            DD-MM-YYYY
+          </p>
+          <button
+            onclick="copyToClipboard('dashFormat')"
+            class="p-2 text-gray-400 transition-all duration-150 cursor-pointer active:scale-90"
+            title="Copy"
+          >
+            <svg
+              width="20"
+              height="20"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
+              ></path>
+            </svg>
+          </button>
+        </div>
+        <p
+          id="dashFormat"
+          class="text-[#888888] dark:text-white text-lg leading-relaxed min-h-[1.75rem]"
+        >
+          Select your date of birth
+        </p>
+      </div>
+    </div>
+  </section>
+</main>
