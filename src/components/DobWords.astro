@@ -1,0 +1,473 @@
+---
+
+---
+
+<!-- Content -->
+<main class="w-full max-w-2xl mx-auto px-4 py-12">
+  <!-- Hero Section -->
+  <section class="mb-8">
+    <h1 class="text-4xl font-bold mb-8 text-gray-900 dark:text-white">
+      Date of Birth in Words
+    </h1>
+    <p class="text-[#555555] dark:text-[#bbbbbb] text-base mb-8">
+      Enter your date of birth to convert it into words.
+    </p>
+
+    <!-- App -->
+    <div class="space-y-4 mb-8">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <!-- Day Dropdown -->
+        <div>
+          <label
+            for="daySelect"
+            class="block text-sm font-medium text-[#888888] dark:text-white mb-2"
+            >Day</label
+          >
+          <select
+            id="daySelect"
+            class="input input-lg w-full rounded-lg bg-[#88888822] text-[#888888] dark:text-white border-0 focus:outline-none p-3"
+            onchange="updateDateOfBirth()"
+          >
+            <option value="" class="dark:bg-[#2c2c2c] dark:text-white"
+              >Day</option
+            >
+          </select>
+        </div>
+
+        <!-- Month Dropdown -->
+        <div>
+          <label
+            for="monthSelect"
+            class="block text-sm font-medium text-[#888888] dark:text-white mb-2"
+            >Month</label
+          >
+          <select
+            id="monthSelect"
+            class="input input-lg w-full rounded-lg bg-[#88888822] text-[#888888] dark:text-white border-0 focus:outline-none p-3"
+            onchange="updateDateOfBirth()"
+          >
+            <option value="" class="dark:bg-[#2c2c2c] dark:text-white"
+              >Month</option
+            >
+            <option value="01" class="dark:bg-[#2c2c2c] dark:text-white"
+              >January</option
+            >
+            <option value="02" class="dark:bg-[#2c2c2c] dark:text-white"
+              >February</option
+            >
+            <option value="03" class="dark:bg-[#2c2c2c] dark:text-white"
+              >March</option
+            >
+            <option value="04" class="dark:bg-[#2c2c2c] dark:text-white"
+              >April</option
+            >
+            <option value="05" class="dark:bg-[#2c2c2c] dark:text-white"
+              >May</option
+            >
+            <option value="06" class="dark:bg-[#2c2c2c] dark:text-white"
+              >June</option
+            >
+            <option value="07" class="dark:bg-[#2c2c2c] dark:text-white"
+              >July</option
+            >
+            <option value="08" class="dark:bg-[#2c2c2c] dark:text-white"
+              >August</option
+            >
+            <option value="09" class="dark:bg-[#2c2c2c] dark:text-white"
+              >September</option
+            >
+            <option value="10" class="dark:bg-[#2c2c2c] dark:text-white"
+              >October</option
+            >
+            <option value="11" class="dark:bg-[#2c2c2c] dark:text-white"
+              >November</option
+            >
+            <option value="12" class="dark:bg-[#2c2c2c] dark:text-white"
+              >December</option
+            >
+          </select>
+        </div>
+
+        <!-- Year Dropdown -->
+        <div>
+          <label
+            for="yearSelect"
+            class="block text-sm font-medium text-[#888888] dark:text-white mb-2"
+            >Year</label
+          >
+          <select
+            id="yearSelect"
+            class="input input-lg w-full rounded-lg bg-[#88888822] text-[#888888] dark:text-white hover:dark:bg-[#88888825] hover:dark:text-white border-0 focus:outline-none p-3"
+            onchange="updateDateOfBirth()"
+          >
+            <option value="" class="dark:bg-[#2c2c2c] dark:text-white"
+              >Year</option
+            >
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Results -->
+    <div class="space-y-6">
+      <!-- Indian Format -->
+      <div
+        class="bg-[#88888822] text-[#888888] dark:bg-[#FFFFFF0D] dark:text-white hover:dark:bg-[#88888825] hover:dark:text-white rounded-lg p-6"
+      >
+        <div class="flex items-center justify-between mb-6">
+          <p class="text-lg font-medium">Indian Format</p>
+          <button
+            onclick="copyToClipboard('indianFormat')"
+            class="p-2 text-gray-400 transition-all duration-150 cursor-pointer active:scale-90"
+            title="Copy"
+          >
+            <svg
+              width="20"
+              height="20"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
+              ></path>
+            </svg>
+          </button>
+        </div>
+        <p
+          id="indianFormat"
+          class="text-[#888888] dark:text-white text-lg leading-relaxed min-h-[1.75rem]"
+        >
+          Select your date of birth
+        </p>
+      </div>
+
+      <!-- British Format -->
+      <div
+        class="bg-[#88888822] text-[#888888] dark:bg-[#FFFFFF0D] dark:text-white hover:dark:bg-[#88888825] hover:dark:text-white rounded-lg p-6"
+      >
+        <div class="flex items-center justify-between mb-6">
+          <p class="text-lg font-medium text-[#888888] dark:text-white">
+            British Format
+          </p>
+          <button
+            onclick="copyToClipboard('britishFormat')"
+            class="p-2 text-gray-400 transition-all duration-150 cursor-pointer active:scale-90"
+            title="Copy"
+          >
+            <svg
+              width="20"
+              height="20"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
+              ></path>
+            </svg>
+          </button>
+        </div>
+        <p
+          id="britishFormat"
+          class="text-[#888888] dark:text-white text-lg leading-relaxed min-h-[1.75rem]"
+        >
+          Select your date of birth
+        </p>
+      </div>
+
+      <!-- American Format -->
+      <div
+        class="bg-[#88888822] text-[#888888] dark:bg-[#FFFFFF0D] dark:text-white hover:dark:bg-[#88888825] hover:dark:text-white rounded-lg p-6"
+      >
+        <div class="flex items-center justify-between mb-6">
+          <p class="text-lg font-medium text-[#888888] dark:text-white">
+            American Format
+          </p>
+          <button
+            onclick="copyToClipboard('americanFormat')"
+            class="p-2 text-gray-400 transition-all duration-150 cursor-pointer active:scale-90"
+            title="Copy"
+          >
+            <svg
+              width="20"
+              height="20"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
+              ></path>
+            </svg>
+          </button>
+        </div>
+        <p
+          id="americanFormat"
+          class="text-[#888888] dark:text-white text-lg leading-relaxed min-h-[1.75rem]"
+        >
+          Select your date of birth
+        </p>
+      </div>
+
+      <!-- International Format -->
+      <div
+        class="bg-[#88888822] text-[#888888] dark:bg-[#FFFFFF0D] dark:text-white hover:dark:bg-[#88888825] hover:dark:text-white rounded-lg p-6"
+      >
+        <div class="flex items-center justify-between mb-6">
+          <p class="text-lg font-medium text-[#888888] dark:text-white">
+            International Format
+          </p>
+          <button
+            onclick="copyToClipboard('internationalFormat')"
+            class="p-2 text-gray-400 transition-all duration-150 cursor-pointer active:scale-90"
+            title="Copy"
+          >
+            <svg
+              width="20"
+              height="20"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
+              ></path>
+            </svg>
+          </button>
+        </div>
+        <p
+          id="internationalFormat"
+          class="text-[#888888] dark:text-white text-lg leading-relaxed min-h-[1.75rem]"
+        >
+          Select your date of birth
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Content -->
+  <section
+    class="mb-8 space-y-4 text-[#555555] dark:text-[#bbbbbb] leading-relaxed"
+  >
+    <!-- How to Write Date of Birth in Words -->
+    <h2 class="text-2xl font-semibold mb-4 text-[#111111] dark:text-white">
+      How to Write Date of Birth in Words?
+    </h2>
+    <p>
+      Countries use different date formats: some use <a
+        href="https://nirajkumar.space/dob/dobinfigures/"
+        class="links">DD/MM/YYYY</a
+      >, others use MM/DD/YYYY.
+    </p>
+    <p>You should use the correct date format according to your country.</p>
+
+    <!-- Indian Format -->
+    <h3 class="text-xl font-semibold mb-4 text-[#111111] dark:text-white">
+      How to Write Date of Birth in Words in Indian Format?
+    </h3>
+    <p>
+      DD/MM/YYYY Format - Indian legal system use standard day/month/year
+      format.
+    </p>
+    <ul class="list-disc mb-2 space-y-2">
+      <li>
+        <strong>Day</strong> - Write day in ordinal numbers (First, Second, Third,
+        etc.).
+      </li>
+      <li>
+        <strong>Month</strong> - Write the month in full format (January, February,
+        March, etc).
+      </li>
+      <li>
+        <strong>Year</strong> - Write year in words using the cardinal numbers (2005
+        → Two Thousand Five).
+      </li>
+    </ul>
+    <p class="mb-2">
+      Example - 18 January 2024 → Eighteenth January, Two Thousand Twenty Four
+    </p>
+    <p class="text-red-400">
+      Note: For years before 2000, ordinal numbers are used (1997 → Nineteen
+      Hundred Ninety Seven).
+    </p>
+
+    <!-- British Format -->
+
+    <h3 class="text-xl font-semibold mb-4 text-[#111111] dark:text-white">
+      How to Write Date of Birth in Words in British Format?
+    </h3>
+    <p>
+      DD/MM/YYYY Format - British legal system use standard day/month/year
+      format.
+    </p>
+    <ul class="list-disc mb-2 space-y-2">
+      <li>
+        <strong>Day</strong> - Write the day in ordinal numbers (First, Second, Third,
+        etc.), followed by 'the'.
+      </li>
+      <li>
+        <strong>Month</strong> - Write the month in full format (January, February,
+        March, etc).
+      </li>
+      <li>
+        <strong>Year</strong> - Write year in words using the cardinal numbers (2007
+        → Two Thousand and Seven).
+      </li>
+    </ul>
+    <p class="mb-2">
+      Example - 18 January 2024 → The Eighteenth Of January, Two Thousand And
+      Twenty Four
+    </p>
+    <p class="text-red-400">
+      Note: Include the before cardinal day, and always include "and" between
+      the year.
+    </p>
+
+    <!-- American Format -->
+    <h3 class="text-xl font-semibold mb-4 text-[#111111] dark:text-white">
+      How to Write Date of Birth in Words in American Format?
+    </h3>
+    <p>MM/DD/YYYY Format - American legal system use month/day/year format.</p>
+    <ul class="list-disc mb-2 space-y-2">
+      <li>
+        <strong>Month</strong> - Write the month in full format (January, February,
+        March, etc).
+      </li>
+      <li>
+        <strong>Day</strong> - Write day in ordinal numbers (First, Second, Third,
+        etc.).
+      </li>
+      <li>
+        <strong>Year</strong> - Write year in words using the cardinal numbers (20255
+        → Two Thousand Twenty Five).
+      </li>
+    </ul>
+    <p>
+      Example - 18 January 2024 → January Eighteenth, Two Thousand Twenty Four
+    </p>
+
+    <!-- International Format -->
+    <h3 class="text-xl font-semibold mb-4 text-[#111111] dark:text-white">
+      How to Write Date of Birth in Words in International Format?
+    </h3>
+    <p>
+      DD/MM/YYYY Format - International system use standard day/month/year
+      format.
+    </p>
+    <ul class="list-disc mb-2 space-y-2">
+      <li>
+        <strong>Day</strong> - Write the day in ordinal numbers (First, Second, Third,
+        etc.), followed by 'the'.
+      </li>
+      <li>
+        <strong>Month</strong> - Write the month in full format (January, February,
+        March, etc).
+      </li>
+      <li>
+        <strong>Year</strong> - Write year in words using the cardinal numbers (2007
+        → Two Thousand and Seven).
+      </li>
+    </ul>
+    <p class="mb-2">
+      Example - 18 January 2024 → The Eighteenth Day Of January, Two Thousand
+      And Twenty Four
+    </p>
+    <p class="text-red-400">
+      Note: Include "the" before the day and "Day of" before the month.
+    </p>
+
+    <!-- Examples  -->
+    <h2 class="text-3xl font-semibold mb-4 text-[#111111] dark:text-white">
+      Examples
+    </h2>
+    <div class="overflow-x-auto mb-8">
+      <table
+        class="table w-full border border-gray-400 text-center text-base leading-relaxed"
+      >
+        <thead
+          class="bg-gray-50 text-gray-600 dark:bg-[#111111] dark:text-white text-base md:text-lg leading-relaxed"
+        >
+          <tr>
+            <th class="border border-gray-300 dark:border-[#888888] p-2"
+              >Date of Birth</th
+            >
+            <th class="border border-gray-300 dark:border-[#888888] p-2"
+              >Date of Birth (in words)</th
+            >
+          </tr>
+        </thead>
+        <tbody class="bg-[#ffffff0d]">
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >10 May 1963</td
+            >
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >Tenth May, Nineteen Hundred Sixty Three</td
+            >
+          </tr>
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >01 January 1970</td
+            >
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >First January, Nineteen Hundred Seventy</td
+            >
+          </tr>
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >20 January 1989</td
+            >
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >Twentieth January, Nineteen Hundred Eighty Nine</td
+            >
+          </tr>
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >06 April 1992</td
+            >
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >Sixth April, Nineteen Hundred Ninety Two</td
+            >
+          </tr>
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >16 June 1997</td
+            >
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >Sixteenth June, Nineteen Hundred Ninety Seven</td
+            >
+          </tr>
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >18 January 2001</td
+            >
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >Eighteenth January, Two Thousand One</td
+            >
+          </tr>
+          <tr class="hover:bg-gray-100 dark:hover:bg-[#ffffff0d]">
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >30 July 2012</td
+            >
+            <td class="border border-gray-300 dark:border-[#888888] p-2"
+              >Thirtieth July, Two Thousand Twelve</td
+            >
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+</main>

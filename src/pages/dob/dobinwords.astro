@@ -1,0 +1,394 @@
+---
+import "../../styles/global.css";
+import Navigation from "../../components/Navigation.astro";
+import DobWords from "../../components/DobWords.astro";
+---
+
+<html lang="en-US" data-theme="light" class="bg-white dark:bg-[#111111]">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/fav.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Date of Birth in Words</title>
+    <meta
+      name="description"
+      content="Use this date of birth in words converter to convert your date of birth in words as per the official and Indian legal system."
+    />
+    <link rel="canonical" href="https://nirajkumar.space/dob/dobinwords/" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Gloria+Hallelujah&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      html {
+        font-size: 16px;
+      }
+
+      body {
+        font-family: "Inter", system-ui, sans-serif;
+      }
+
+      :root {
+        --sel-bg: #dfdfdf;
+        --sel-text: #555555;
+      }
+
+      .dark {
+        --sel-bg: #242424;
+        --sel-text: #bbbbbb;
+      }
+
+      *::selection {
+        background: var(--sel-bg) !important;
+        color: var(--sel-text) !important;
+        text-shadow: none !important;
+      }
+      *::-moz-selection {
+        background: var(--sel-bg) !important;
+        color: var(--sel-text) !important;
+        text-shadow: none !important;
+      }
+    </style>
+
+    <!-- FOUC Removal -->
+    <script is:inline>
+      (function () {
+        const theme = localStorage.theme;
+        if (
+          theme === "dark" ||
+          (!theme && window.matchMedia("(prefers-color-scheme: dark)").matches)
+        ) {
+          document.documentElement.classList.add("dark");
+        } else {
+          document.documentElement.classList.remove("dark");
+        }
+      })();
+    </script>
+
+    <!-- Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-W2389NHMDM"
+    ></script>
+    <script is:inline>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+
+      gtag("config", "G-W2389NHMDM");
+    </script>
+  </head>
+  <body
+    class="bg-white text-neutral-950 dark:bg-[#111111] dark:text-white min-h-screen w-full"
+  >
+    <Navigation />
+    <DobWords />
+
+    <script>
+      import "../../scripts/darkmode.js";
+    </script>
+
+    <script is:inline>
+      document.addEventListener("DOMContentLoaded", function () {
+        populateDays();
+        populateYears();
+      });
+
+      // Populate day dropdown
+      function populateDays() {
+        const daySelect = document.getElementById("daySelect");
+        for (let i = 1; i <= 31; i++) {
+          const option = document.createElement("option");
+          option.value = i.toString().padStart(2, "0");
+          option.textContent = i;
+          option.className = "dark:bg-[#2c2c2c] dark:text-white";
+          daySelect.appendChild(option);
+        }
+      }
+
+      // Populate year dropdown (from 1900 to current year)
+      function populateYears() {
+        const yearSelect = document.getElementById("yearSelect");
+        const currentYear = new Date().getFullYear();
+        for (let i = 2100; i >= 1900; i--) {
+          const option = document.createElement("option");
+          option.value = i;
+          option.textContent = i;
+          option.className = "dark:bg-[#2c2c2c] dark:text-white";
+          yearSelect.appendChild(option);
+        }
+      }
+
+      // Number to words conversion functions
+      function numberToWords(num) {
+        const ones = [
+          "",
+          "One",
+          "Two",
+          "Three",
+          "Four",
+          "Five",
+          "Six",
+          "Seven",
+          "Eight",
+          "Nine",
+        ];
+        const teens = [
+          "Ten",
+          "Eleven",
+          "Twelve",
+          "Thirteen",
+          "Fourteen",
+          "Fifteen",
+          "Sixteen",
+          "Seventeen",
+          "Eighteen",
+          "Nineteen",
+        ];
+        const tens = [
+          "",
+          "",
+          "Twenty",
+          "Thirty",
+          "Forty",
+          "Fifty",
+          "Sixty",
+          "Seventy",
+          "Eighty",
+          "Ninety",
+        ];
+        const thousands = ["", "Thousand", "Million", "Billion"];
+
+        if (num === 0) return "Zero";
+
+        function convertHundreds(n) {
+          let result = "";
+
+          if (n >= 100) {
+            result += ones[Math.floor(n / 100)] + " Hundred";
+            n %= 100;
+            if (n > 0) result += " ";
+          }
+
+          if (n >= 20) {
+            result += tens[Math.floor(n / 10)];
+            if (n % 10 > 0) {
+              result += " " + ones[n % 10];
+            }
+          } else if (n >= 10) {
+            result += teens[n - 10];
+          } else if (n > 0) {
+            result += ones[n];
+          }
+
+          return result;
+        }
+
+        let result = "";
+        let thousandCounter = 0;
+
+        while (num > 0) {
+          if (num % 1000 !== 0) {
+            const chunk = convertHundreds(num % 1000);
+            if (thousands[thousandCounter]) {
+              result =
+                chunk +
+                " " +
+                thousands[thousandCounter] +
+                (result ? " " + result : "");
+            } else {
+              result = chunk + (result ? " " + result : "");
+            }
+          }
+          num = Math.floor(num / 1000);
+          thousandCounter++;
+        }
+
+        return result;
+      }
+
+      // Function to convert years in proper format
+      function yearToWords(year) {
+        if (year >= 2000) {
+          // For 2000 and above: "Two Thousand", "Two Thousand One", etc.
+          return numberToWords(year);
+        } else if (year >= 1000) {
+          // For 1000-1999: "Nineteen Hundred Forty-Six", etc.
+          const century = Math.floor(year / 100);
+          const remainder = year % 100;
+
+          if (remainder === 0) {
+            return numberToWords(century) + " Hundred";
+          } else {
+            return (
+              numberToWords(century) + " Hundred " + numberToWords(remainder)
+            );
+          }
+        } else {
+          // For years below 1000, use regular number conversion
+          return numberToWords(year);
+        }
+      }
+
+      // Function for years with "And" (for British/American formats)
+      function yearToWordsWithAnd(year) {
+        if (year >= 2000) {
+          // For 2000 and above, add "And" if there's a remainder
+          const thousands = Math.floor(year / 1000);
+          const remainder = year % 1000;
+
+          if (remainder === 0) {
+            return numberToWords(year);
+          }
+
+          if (remainder < 100) {
+            return (
+              numberToWords(thousands * 1000) +
+              " And " +
+              numberToWords(remainder)
+            );
+          }
+
+          return numberToWords(year);
+        } else {
+          // For years below 2000, use the regular year format
+          return yearToWords(year);
+        }
+      }
+
+      function getOrdinal(num) {
+        const ordinals = {
+          1: "First",
+          2: "Second",
+          3: "Third",
+          4: "Fourth",
+          5: "Fifth",
+          6: "Sixth",
+          7: "Seventh",
+          8: "Eighth",
+          9: "Ninth",
+          10: "Tenth",
+          11: "Eleventh",
+          12: "Twelfth",
+          13: "Thirteenth",
+          14: "Fourteenth",
+          15: "Fifteenth",
+          16: "Sixteenth",
+          17: "Seventeenth",
+          18: "Eighteenth",
+          19: "Nineteenth",
+          20: "Twentieth",
+          21: "Twenty-First",
+          22: "Twenty-Second",
+          23: "Twenty-Third",
+          24: "Twenty-Fourth",
+          25: "Twenty-Fifth",
+          26: "Twenty-Sixth",
+          27: "Twenty-Seventh",
+          28: "Twenty-Eighth",
+          29: "Twenty-Ninth",
+          30: "Thirtieth",
+          31: "Thirty-First",
+        };
+        return ordinals[num] || numberToWords(num) + "th";
+      }
+
+      function getMonthName(monthNum) {
+        const months = [
+          "",
+          "January",
+          "February",
+          "March",
+          "April",
+          "May",
+          "June",
+          "July",
+          "August",
+          "September",
+          "October",
+          "November",
+          "December",
+        ];
+        return months[parseInt(monthNum)];
+      }
+
+      // Update date of birth display
+      function updateDateOfBirth() {
+        const day = document.getElementById("daySelect").value;
+        const month = document.getElementById("monthSelect").value;
+        const year = document.getElementById("yearSelect").value;
+
+        const indianFormatElement = document.getElementById("indianFormat");
+        const britishFormatElement = document.getElementById("britishFormat");
+        const americanFormatElement = document.getElementById("americanFormat");
+        const internationalFormatElement = document.getElementById(
+          "internationalFormat"
+        );
+
+        if (day && month && year) {
+          const dayInWords = getOrdinal(parseInt(day));
+          const monthName = getMonthName(month);
+          const yearInWords = yearToWords(parseInt(year));
+          const yearInWordsWithAnd = yearToWordsWithAnd(parseInt(year));
+
+          // Indian Format: "Eighteenth January, Two Thousand One"
+          const indianFormat = `${dayInWords} ${monthName}, ${yearInWords}`;
+          indianFormatElement.textContent = indianFormat;
+
+          // British Format: "The Thirtieth Of March, Nineteen Hundred Ninety-Three"
+          const britishFormat = `The ${dayInWords} Of ${monthName}, ${yearInWordsWithAnd}`;
+          britishFormatElement.textContent = britishFormat;
+
+          // American Format: "December The First, Two Thousand And Seventeen"
+          const americanFormat = `${monthName} ${dayInWords}, ${yearInWords}`;
+          americanFormatElement.textContent = americanFormat;
+
+          // International Format: "The Eighteenth Day Of January, Two Thousand One"
+          const internationalFormat = `The ${dayInWords} Day Of ${monthName}, ${yearInWordsWithAnd}`;
+          internationalFormatElement.textContent = internationalFormat;
+        } else {
+          indianFormatElement.textContent = "Select your date of birth";
+          britishFormatElement.textContent = "Select your date of birth";
+          americanFormatElement.textContent = "Select your date of birth";
+          internationalFormatElement.textContent = "Select your date of birth";
+        }
+      }
+
+      // Copy to clipboard function
+      function copyToClipboard(elementId) {
+        const element = document.getElementById(elementId);
+        const text = element.textContent;
+
+        if (text === "Select your date of birth") {
+          return;
+        }
+
+        navigator.clipboard
+          .writeText(text)
+          .then(function () {
+            // Visual feedback
+            const button = element.parentElement.querySelector("button");
+          })
+          .catch(function (err) {
+            console.error("Failed to copy text: ", err);
+          });
+      }
+    </script>
+  </body>
+</html>
