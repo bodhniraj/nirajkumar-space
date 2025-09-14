@@ -1,0 +1,277 @@
+---
+
+---
+
+<!-- Content -->
+<main class="w-full mx-auto px-4 py-12">
+  <!-- Hero Section -->
+  <section class="mb-4">
+    <h1
+      class="text-4xl font-bold mb-4 text-gray-900 dark:text-white text-center"
+    >
+      Aura Wallpaper Generator
+    </h1>
+    <p class="text-[#555555] dark:text-[#bbbbbb] text-base mb-8 text-center">
+      Easily create beautiful and aesthetic radial as well as linear aura
+      gradient wallpaper.
+    </p>
+
+    <!-- App -->
+    <div class="w-full max-w-7xl mx-auto">
+      <div class="grid lg:grid-cols-3 gap-8">
+        <!-- Preview Canvas -->
+        <div class="lg:col-span-2">
+          <div
+            class="bg-white text-[#888888] dark:bg-[#FFFFFF0D] dark:text-white rounded-lg p-6 shadow-sm"
+          >
+            <div class="flex justify-between items-center mb-4">
+              <h2 class="text-lg font-medium">Preview</h2>
+              <div class="flex gap-2">
+                <button
+                  id="toggleAnimation"
+                  class="px-2 py-1 text-sm bg-gray-100 dark:bg-[#292929] rounded-lg cursor-pointer"
+                >
+                  <span id="animationIcon">🎥</span> Animation
+                </button>
+              </div>
+            </div>
+            <canvas
+              id="auraCanvas"
+              width="800"
+              height="600"
+              class="w-full aura-canvas bg-black rounded-lg shadow-sm"></canvas>
+
+            <!-- CSS Output -->
+            <div
+              class="mt-4 p-4 bg-white text-[#888888] dark:bg-[#FFFFFF0D] dark:text-white rounded-lg"
+            >
+              <div class="flex justify-between items-center mb-2">
+                <label class="text-base font-medium">Generated CSS</label>
+                <button
+                  id="copyCSSBtn"
+                  class="text-xs px-2 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded transition-colors cursor-pointer"
+                  >Copy</button
+                >
+              </div>
+              <code
+                id="cssOutput"
+                class="block text-xs text-gray-600 bg-white p-2 rounded border border-[#00000020] font-mono break-all"
+                >background: linear-gradient(135deg, #5271ff, #4ecdc4, #34D399);</code
+              >
+            </div>
+          </div>
+        </div>
+
+        <!-- Control Panel -->
+        <div class="lg:col-span-1">
+          <div
+            class="control-panel p-6 bg-white text-[#888888] dark:bg-[#FFFFFF0D] dark:text-white rounded-lg shadow-sm"
+          >
+            <h2 class="text-lg font-medium mb-6">Controls</h2>
+
+            <!-- Colors -->
+            <div class="mb-6">
+              <label class="block text-sm font-medium mb-3">Colors</label>
+              <div class="flex gap-2 mb-3" id="colorInputs">
+                <input
+                  type="color"
+                  id="color1"
+                  class="color-input cursor-pointer"
+                  value="#5271ff"
+                />
+                <input
+                  type="color"
+                  id="color2"
+                  class="color-input cursor-pointer"
+                  value="#4ecdc4"
+                />
+                <input
+                  type="color"
+                  id="color3"
+                  class="color-input cursor-pointer"
+                  value="#34D399"
+                />
+              </div>
+              <button
+                id="addColor"
+                class="text-xs text-black bg-gray-100 dark:bg-[#FFFFFF0D] dark:text-white cursor-pointer px-2 py-1 rounded-full"
+                >+ Add Color</button
+              >
+            </div>
+
+            <!-- Preset Palettes -->
+            <div class="mb-6">
+              <label class="block text-sm font-medium mb-3">Presets</label>
+              <div class="grid grid-cols-3 gap-2">
+                <button
+                  class="preset-btn p-2 rounded-lg text-xs font-medium bg-gradient-to-r from-orange-400 to-pink-400 text-white transition-all duration-300 ease-in-out hover:scale-105 cursor-pointer"
+                  data-preset="sunset">Sunset</button
+                >
+                <button
+                  class="preset-btn p-2 rounded-lg text-xs font-medium bg-gradient-to-r from-blue-400 to-teal-400 text-white transition-all duration-300 ease-in-out hover:scale-105 cursor-pointer"
+                  data-preset="ocean">Ocean</button
+                >
+                <button
+                  class="preset-btn p-2 rounded-lg text-xs font-medium bg-gradient-to-r from-purple-400 to-indigo-400 text-white transition-all duration-300 ease-in-out hover:scale-105 cursor-pointer"
+                  data-preset="galaxy">Galaxy</button
+                >
+                <button
+                  class="preset-btn p-2 rounded-lg text-xs font-medium bg-gradient-to-r from-green-400 to-blue-400 text-white transition-all duration-300 ease-in-out hover:scale-105 cursor-pointer"
+                  data-preset="neon">Neon</button
+                >
+                <button
+                  class="preset-btn p-2 rounded-lg text-xs font-medium bg-gradient-to-r from-pink-300 to-purple-300 text-white transition-all duration-300 ease-in-out hover:scale-105 cursor-pointer"
+                  data-preset="pastel">Pastel</button
+                >
+                <button
+                  class="preset-btn p-2 rounded-lg text-xs font-medium bg-gradient-to-r from-yellow-400 to-orange-400 text-white transition-all duration-300 ease-in-out hover:scale-105 cursor-pointer"
+                  data-preset="warm">Warm</button
+                >
+              </div>
+            </div>
+
+            <!-- Intensity -->
+            <div class="mb-6">
+              <label class="block text-sm font-medium mb-2">Intensity</label>
+              <input
+                type="range"
+                id="intensity"
+                class="slider w-full cursor-pointer"
+                min="0.1"
+                max="2"
+                step="0.1"
+                value="1.5"
+              />
+              <div class="flex justify-between text-xs mt-1">
+                <span>Subtle</span>
+                <span>Intense</span>
+              </div>
+            </div>
+
+            <!-- Size -->
+            <div class="mb-6">
+              <label class="block text-sm font-medium mb-2">Size</label>
+              <input
+                type="range"
+                id="size"
+                class="slider w-full cursor-pointer"
+                min="0.3"
+                max="2"
+                step="0.1"
+                value="1.4"
+              />
+              <div class="flex justify-between text-xs mt-1">
+                <span>Tight</span>
+                <span>Spread</span>
+              </div>
+            </div>
+
+            <!-- Shape Toggle -->
+            <div class="mb-6">
+              <label class="block text-sm font-medium mb-2">Shape</label>
+              <div
+                class="flex bg-white text-[#888888] dark:bg-[#FFFFFF0D] dark:text-white rounded-lg p-1"
+              >
+                <button
+                  id="circularBtn"
+                  class="flex-1 px-3 py-1 text-sm rounded-md bg-white text-[#888888] shadow-sm cursor-pointer"
+                  >Circular</button
+                >
+                <button
+                  id="linearBtn"
+                  class="flex-1 px-3 py-1 text-sm rounded-md cursor-pointer"
+                  >Linear</button
+                >
+              </div>
+            </div>
+
+            <!-- Resolution -->
+            <div class="mb-6">
+              <label class="block text-sm font-medium mb-2"
+                >Export Resolution</label
+              >
+              <select
+                id="resolution"
+                class="w-full px-3 py-2 border border-gray-300 dark:border-[#0a0a0a50] rounded-lg text-sm cursor-pointer"
+              >
+                <option
+                  value="1920x1080"
+                  class="dark:bg-[#2c2c2c] dark:text-white"
+                  >1920×1080 (HD)</option
+                >
+                <option
+                  value="2560x1440"
+                  class="dark:bg-[#2c2c2c] dark:text-white"
+                  >2560×1440 (QHD)</option
+                >
+                <option
+                  value="3840x2160"
+                  class="dark:bg-[#2c2c2c] dark:text-white"
+                  >3840×2160 (4K)</option
+                >
+                <option
+                  value="1080x1920"
+                  class="dark:bg-[#2c2c2c] dark:text-white"
+                  >1080×1920 (Mobile)</option
+                >
+              </select>
+            </div>
+
+            <!-- Download Format -->
+            <div class="mb-6">
+              <label class="block text-sm font-medium mb-3"
+                >Download Format</label
+              >
+              <div class="space-y-2">
+                <label class="flex items-center">
+                  <input
+                    type="radio"
+                    name="format"
+                    value="png"
+                    class="mr-2 cursor-pointer"
+                    checked
+                  />
+                  <span class="text-sm">PNG (Lossless)</span>
+                </label>
+                <label class="flex items-center">
+                  <input
+                    type="radio"
+                    name="format"
+                    value="jpeg"
+                    class="mr-2 cursor-pointer"
+                  />
+                  <span class="text-sm">JPEG (Compressed)</span>
+                </label>
+                <label class="flex items-center">
+                  <input
+                    type="radio"
+                    name="format"
+                    value="webp"
+                    class="mr-2 cursor-pointer"
+                  />
+                  <span class="text-sm">WebP (Modern)</span>
+                </label>
+              </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="space-y-3">
+              <button
+                id="download"
+                class="bg-[#111111] text-white dark:bg-white dark:text-black w-full px-4 py-3 rounded-lg font-medium cursor-pointer border border-[#2222220] dark:border-[#0a0a0a50] shadow-xs"
+              >
+                Download
+              </button>
+              <button
+                id="randomize"
+                class="bg-[#FFFFFF0D] w-full px-4 py-3 rounded-lg font-medium cursor-pointer border border-gray-300 dark:bg-transparent dark:border-[#0a0a0a80] shadow-sm"
+              >
+                Random
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
